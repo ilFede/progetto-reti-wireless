@@ -1,17 +1,26 @@
 package fede.profile; 
 
+import java.util.ArrayList;
+
 public class Profile {
 	private String profileName;
 	private int ringVolume;
-	private boolean wirelessState;
-	private boolean blutoothState;
-	private boolean vibrationState;
+	private boolean wirelessSet;
+	private boolean blutoothSet;
+	private boolean vibrationSet;
+	private ArrayList<String> wirelessCond; //Wireless che devono essere ricevute per attivare il profilo
+	private ArrayList<String> blutoothCond; //Dispositivi che devono essere ricevuti per attivare il profilo
+	private boolean externCond; //Luogo (interno o esterno) in cui si deve essere per attivare il profilo
 	
-	public Profile(int ringVolume, boolean wirelessState, boolean blutoothState, boolean vibrationState){
+	public Profile(String profileName, int ringVolume, boolean wirelessSet, boolean blutoothSet, boolean vibrationSet, ArrayList<String> wirelessCond, ArrayList<String> blutoothCond, boolean externCond){
+		this.profileName = profileName;
 		this.ringVolume = ringVolume;
-		this.blutoothState = blutoothState;
-		this.wirelessState = wirelessState;
-		this.vibrationState = vibrationState;
+		this.blutoothSet = blutoothSet;
+		this.wirelessSet = wirelessSet;
+		this.vibrationSet = vibrationSet;
+		this.wirelessCond = wirelessCond;
+		this.blutoothCond = blutoothCond;
+		this.externCond = externCond;
 	}	
 	
 	public void setProfileName(String newProfileName){
@@ -21,16 +30,16 @@ public class Profile {
 		ringVolume = newRingVolume;
 	}
 	
-	public void setWireless(boolean newWirelessState){
-		wirelessState = newWirelessState; 
+	public void setWireless(boolean newWirelessSet){
+		wirelessSet = newWirelessSet; 
 	}
 	
-	public void setBlutoothState(boolean newBlutoothState){
-		blutoothState = newBlutoothState;
+	public void setBlutoothSet(boolean newBlutoothSet){
+		blutoothSet = newBlutoothSet;
 	}
 	
-	public void setVibratioState(boolean newVibrationState){
-		vibrationState = newVibrationState;
+	public void setVibratioSet(boolean newVibrationSet){
+		vibrationSet = newVibrationSet;
 	}
 	
 	public String getProfileName(){
@@ -41,15 +50,27 @@ public class Profile {
 		return ringVolume;
 	}
 	
-	public boolean getBlutoothState(){
-		return blutoothState;
+	public boolean getBlutoothSet(){
+		return blutoothSet;
 	}
 	
-	public boolean getWirelessState(){
-		return wirelessState;
+	public boolean getWirelessSet(){
+		return wirelessSet;
 	}
 	
-	public boolean getVibrationState(){
-		return vibrationState;
+	public boolean getVibrationSet(){
+		return vibrationSet;
+	}
+	
+	public ArrayList<String> getBluetoothCond(){
+		return blutoothCond;
+	}
+	
+	public ArrayList<String> getWirelessCond(){
+		return wirelessCond;
+	}
+	
+	public boolean getExternCond(){
+		return externCond;
 	}
 }
