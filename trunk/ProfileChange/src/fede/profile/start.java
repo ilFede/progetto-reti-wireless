@@ -2,7 +2,6 @@ package fede.profile;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
@@ -19,14 +18,10 @@ public class start extends Activity {
         TextView tv = new TextView(this);
         tv.setText("Hello, Android!!!");
         setContentView(tv);
-       // try{
-		
-			FileOutputStream fOut = null;
-			OutputStreamWriter osw = null;
-	
+       // try{	
 			try{
-				fOut = openFileOutput("settings.dat",MODE_PRIVATE); 
-				osw = new OutputStreamWriter(fOut);
+				FileOutputStream fOut = openFileOutput("settings.dat",MODE_PRIVATE); 
+				OutputStreamWriter osw = new OutputStreamWriter(fOut);
 				osw.write("ciao");
 				osw.flush();
 				osw.close();
@@ -37,35 +32,35 @@ public class start extends Activity {
 				e.printStackTrace();
 				tv.setText("errore1");
 			}
-						
-			
-			FileInputStream fIn = null;
-			InputStreamReader isr = null;
 
-			char[] inputBuffer = new char[255];
-			String data = null;
+			/**char[] inputBuffer = new char[255];
+			String data = null;*/
 
 			try{
-			fIn = openFileInput("settings.dat"); 
-			isr = new InputStreamReader(fIn);
-			isr.read(inputBuffer);
-			data = new String(inputBuffer) + "adsda";
-			tv.setText(data);
+				FileInputStream fIn = openFileInput("settings.dat");
+				InputStreamReader osr = new InputStreamReader(fIn);
+				String tmp = "";
+				while(osr.ready()){
+					tmp = tmp + (char)osr.read();
+				}
+				
+				/**Scanner sc = new Scanner(new File("/data/data/fede.profile/file/settings.dat"));
+				sc.useDelimiter("\n");
+				String tmp = "";
+				while (sc.hasNext()){
+					tmp = tmp + sc.next();
+				}
+				fIn = openFileInput("settings.dat"); 
+				isr = new InputStreamReader(fIn);
+				isr.read(inputBuffer);
+				data = new String(inputBuffer) + "adsda";*/
+				tv.setText("prova" + tmp);
 			}
-			catch (Exception e) { 
-			e.printStackTrace();tv.setText("errore4");
+			catch (Exception e){ 
+			    tv.setText(e.getMessage());
 			
 			}
-			finally {
-			try {
-			isr.close();
-			fIn.close();
-			} catch (IOException e) {
-			e.printStackTrace();
-			tv.setText("errore5");
-			}
-			}
-			while(true){}
+			//while(true){}
        
 
         	/*
