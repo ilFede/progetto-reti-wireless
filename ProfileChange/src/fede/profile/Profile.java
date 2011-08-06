@@ -62,7 +62,7 @@ public class Profile {
 		return vibrationSet;
 	}
 	
-	public ArrayList<String> getBluetoothCond(){
+	public ArrayList<String> getBlutoothCond(){
 		return blutoothCond;
 	}
 	
