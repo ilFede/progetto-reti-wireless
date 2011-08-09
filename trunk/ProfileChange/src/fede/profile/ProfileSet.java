@@ -60,6 +60,30 @@ public class ProfileSet {
 		return null;
 	}
 	
+	public String saveProfilesToString(){
+    	try{
+	    	Element profileEl = convProfilesToXml();
+	    	String profileStr = convXmlToString(profileEl);
+	    	return profileStr;
+    	}catch(Exception e){
+    		return null;
+    	}
+    }
+	
+	public void readProfileToString(String profileStr){
+		Document doc;
+		try {
+			doc = convStringToXml(profileStr);
+			readProfilesFromXml(doc);
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	//Crea il set di profili da un Document XML
 	public void readProfilesFromXml(Document xmlProfile){
 		NodeList list = xmlProfile.getElementsByTagName("profile");
@@ -86,18 +110,24 @@ public class ProfileSet {
 				//Creo il nodo ringVolume
 				Element ringVolume = doc.createElement("ringVolume");
 				ringVolume.setNodeValue("" + prof.getRingVolume());
+				//Creo il nodo vibrationSet
+				Element vibrationSet = doc.createElement("vibrationSet");
+				vibrationSet.setNodeValue("" + prof.getVibrationSet());
 				//Creo il nodo wirelessSet
 				Element wirelessSet = doc.createElement("wirelessSet");
 				wirelessSet.setNodeValue("" + prof.getWirelessSet());
 			    //Creo il nodo blutoothSet
 				Element blutoothSet = doc.createElement("blutoothSet");
 				blutoothSet.setNodeValue("" + prof.getBlutoothSet());
-				//Creo il nodo vibrationSet
-				Element vibrationSet = doc.createElement("vibrationSet");
-				vibrationSet.setNodeValue("" + prof.getVibrationSet());
+				//Creo il nodo wirelessCondBool
+				Element wirelessCondBool = doc.createElement("wirelessCondBool");
+				wirelessCondBool.setNodeValue("" + prof.getWirelessCondBool());
 				//Creo il nodo wirelessCond
 				Element wirelessCond = doc.createElement("wirelessCond");
 				wirelessCond.setNodeValue(convArrayToString(prof.getWirelessCond()));
+				//Creo il nodo blutoothCondBool
+				Element blutoothCondBool = doc.createElement("blutoothCondBool");
+				blutoothCondBool.setNodeValue("" + prof.getBlutoothCondBool());
 				//Creo il nodo blutoothCond
 				Element blutoothCond = doc.createElement("blutoothCond");
 				blutoothCond.setNodeValue(convArrayToString(prof.getBlutoothCond()));
@@ -107,10 +137,12 @@ public class ProfileSet {
 				//Appendo i nodi
 				profileNode.appendChild(profileName);
 				profileNode.appendChild(ringVolume);
+				profileNode.appendChild(vibrationSet);
 				profileNode.appendChild(wirelessSet);
 				profileNode.appendChild(blutoothSet);
-				profileNode.appendChild(vibrationSet);
+				profileNode.appendChild(wirelessCondBool);
 				profileNode.appendChild(wirelessCond);
+				profileNode.appendChild(blutoothCondBool);
 				profileNode.appendChild(blutoothCond);
 				profileNode.appendChild(externalCond);
 				root.appendChild(profileNode);
@@ -128,37 +160,49 @@ public class ProfileSet {
 		String profileName = nodeList.item(0).getNodeValue();
 		//Volume suoneria
 		int ringVolume = Integer.parseInt(nodeList.item(1).getNodeValue());
+		//Setup della vibrazione
+		String tmp3 = nodeList.item(2).getNodeValue();
+		boolean vibrationSet = true;
+		if (tmp3.equals("false")){
+			vibrationSet = false;
+		}
 		//Setup della wireless
-		String tmp1 = nodeList.item(2).getNodeValue();
+		String tmp1 = nodeList.item(3).getNodeValue();
 		boolean wirelessSet = true;
 		if (tmp1.equals("false")){
 			wirelessSet = false;
 		}
 		//Setup del blutooth
-		String tmp2 = nodeList.item(3).getNodeValue();
+		String tmp2 = nodeList.item(4).getNodeValue();
 		boolean blutoothSet = true;
 		if (tmp2.equals("false")){
 			blutoothSet = false;
 		}
-		//Setup della vibrazione
-		String tmp3 = nodeList.item(4).getNodeValue();
-		boolean vibrationSet = true;
-		if (tmp3.equals("false")){
-			vibrationSet = false;
+		//Condizioni se considerare la wireless (se false non considero la condizione)
+		String tmp7 = nodeList.item(5).getNodeValue();
+		boolean wirelessCondBool = true;
+		if (tmp7.equals("false")){
+			wirelessCondBool = false;
 		}
-		//Condizioni della wireless
-		String tmp4 = nodeList.item(5).getNodeValue();
+		//Condizioni della wireless (elenco wireless da rilevare pe attivare il profilo)
+		String tmp4 = nodeList.item(6).getNodeValue();
 		ArrayList<String> wirelessCond = convStringToArray(tmp4);
-		//Condizioni del blutooth
-		String tmp5 = nodeList.item(6).getNodeValue();
+		//Condizioni se considerare il blutooth
+		String tmp8 = nodeList.item(7).getNodeValue();
+		boolean blutoothCondBool = true;
+		if (tmp8.equals("false")){
+			blutoothCondBool = false;
+		}
+		//Condizioni del blutooth (se false non considero la condizione)
+		String tmp5 = nodeList.item(8).getNodeValue();
 		ArrayList<String> blutoothCond = convStringToArray(tmp5);
-		//Condizioni del gps
-		String tmp6 = nodeList.item(7).getNodeValue();
+		//Condizioni del gps (elenco dispositivi da rilevare per attivare il profilo)
+		String tmp6 = nodeList.item(9).getNodeValue();
 		boolean externalCond = true;
 		if (tmp6.equals("no")){
 			externalCond = false;
 		}
-		return new Profile(profileName, ringVolume, wirelessSet, blutoothSet, vibrationSet, wirelessCond, blutoothCond, externalCond);
+		return new Profile(profileName, ringVolume, vibrationSet,  wirelessSet, blutoothSet, wirelessCondBool, wirelessCond, blutoothCondBool, blutoothCond, externalCond);
 	}
 	
 	//Converte una stringa in un Document XML
@@ -202,4 +246,6 @@ public class ProfileSet {
 		}
 		return result;
 	}
+	
+	
 }
