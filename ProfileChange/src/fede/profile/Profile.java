@@ -9,16 +9,20 @@ public class Profile {
 	private boolean blutoothSet;
 	private boolean vibrationSet;
 	private ArrayList<String> wirelessCond; //Wireless che devono essere ricevute per attivare il profilo
+	private boolean wirelessCondBool; //true se le bisogna considerare le wireless trovate
 	private ArrayList<String> blutoothCond; //Dispositivi che devono essere ricevuti per attivare il profilo
+	private boolean blutoothCondBool; //true se bisogna considerare i dispositivi blutooth trovati
 	private boolean externCond; //Luogo (interno o esterno) in cui si deve essere per attivare il profilo
 	
-	public Profile(String profileName, int ringVolume, boolean wirelessSet, boolean blutoothSet, boolean vibrationSet, ArrayList<String> wirelessCond, ArrayList<String> blutoothCond, boolean externCond){
+	public Profile(String profileName, int ringVolume, boolean vibrationSet, boolean wirelessSet, boolean blutoothSet, boolean wirelessCondBool, ArrayList<String> wirelessCond, boolean blutoothCondBool, ArrayList<String> blutoothCond, boolean externCond){
 		this.profileName = profileName;
 		this.ringVolume = ringVolume;
+		this.vibrationSet = vibrationSet;
 		this.blutoothSet = blutoothSet;
 		this.wirelessSet = wirelessSet;
-		this.vibrationSet = vibrationSet;
+		this.wirelessCondBool = wirelessCondBool;
 		this.wirelessCond = wirelessCond;
+		this.blutoothCondBool = blutoothCondBool;
 		this.blutoothCond = blutoothCond;
 		this.externCond = externCond;
 	}	
@@ -50,6 +54,10 @@ public class Profile {
 		return ringVolume;
 	}
 	
+	public boolean getVibrationSet(){
+		return vibrationSet;
+	}
+	
 	public boolean getBlutoothSet(){
 		return blutoothSet;
 	}
@@ -58,12 +66,16 @@ public class Profile {
 		return wirelessSet;
 	}
 	
-	public boolean getVibrationSet(){
-		return vibrationSet;
+	public boolean getWirelessCondBool(){
+		return wirelessCondBool;
 	}
 	
 	public ArrayList<String> getBlutoothCond(){
 		return blutoothCond;
+	}
+	
+	public boolean getBlutoothCondBool(){
+		return blutoothCondBool;
 	}
 	
 	public ArrayList<String> getWirelessCond(){

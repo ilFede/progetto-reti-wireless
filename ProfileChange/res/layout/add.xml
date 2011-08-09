@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent" android:gravity="center">
+    <ScrollView android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/scrollView1">
+        <LinearLayout android:layout_height="wrap_content" android:layout_width="match_parent" android:orientation="vertical" android:id="@+id/linearLayout8">
+            <TextView android:layout_height="wrap_content" android:id="@+id/textView5" android:text="  ---Impostazioni del profilo---" android:textAppearance="?android:attr/textAppearanceLarge" android:layout_width="match_parent" android:layout_gravity="fill"></TextView>
+            <LinearLayout android:layout_height="wrap_content" android:layout_width="match_parent" android:weightSum="1" android:id="@+id/linearLayout1">
+                <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/textView1" android:text="Nome profilo:" android:textAppearance="?android:attr/textAppearanceLarge"></TextView>
+                <EditText android:id="@+id/txtProfName" android:layout_height="wrap_content" android:layout_width="match_parent" android:layout_weight="1">
+                    <requestFocus></requestFocus>
+                </EditText>
+            </LinearLayout>
+            <LinearLayout android:layout_height="wrap_content" android:layout_width="match_parent" android:weightSum="1" android:id="@+id/linearLayout3">
+                <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/textView2" android:text="Volume suoneria:" android:textAppearance="?android:attr/textAppearanceLarge"></TextView>
+                <Spinner android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_weight="1" android:id="@+id/spinner1"></Spinner>
+            </LinearLayout>
+            <LinearLayout android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/linearLayout4">
+                <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/textView3" android:text="Wireless:" android:textAppearance="?android:attr/textAppearanceLarge"></TextView>
+                <Spinner android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_weight="1" android:id="@+id/spnWirelessSet"></Spinner>
+            </LinearLayout>
+            <LinearLayout android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/linearLayout5">
+                <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/textView4" android:text="Blutooth:" android:textAppearance="?android:attr/textAppearanceLarge"></TextView>
+                <Spinner android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_weight="1" android:id="@+id/spnBlutoothSet"></Spinner>
+            </LinearLayout>
+            <TextView android:layout_height="wrap_content" android:id="@+id/textView6" android:text="  ---Condizioni di attivazione---" android:textAppearance="?android:attr/textAppearanceLarge" android:layout_width="match_parent"></TextView>
+            <LinearLayout android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/linearLayout2">
+                <CheckBox android:id="@+id/cbxWirelessCondBool" android:layout_height="wrap_content" android:layout_width="wrap_content"></CheckBox>
+                <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/textView7" android:text="Wireless rilevate:" android:textAppearance="?android:attr/textAppearanceLarge"></TextView>
+            </LinearLayout>
+            <EditText android:id="@+id/txtWirelessCond" android:layout_height="wrap_content" android:layout_width="match_parent"></EditText>
+            <LinearLayout android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/linearLayout7">
+                <CheckBox android:id="@+id/cbxBlutoothCondBool" android:layout_height="wrap_content" android:layout_width="wrap_content"></CheckBox>
+                <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/textView8" android:text="Dispositivi rilevati:" android:textAppearance="?android:attr/textAppearanceLarge"></TextView>
+            </LinearLayout>
+            <EditText android:id="@+id/txtBlutoothCond" android:layout_height="wrap_content" android:layout_width="match_parent"></EditText>
+            <LinearLayout android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/linearLayout6">
+                <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/textView9" android:text="Locazione" android:textAppearance="?android:attr/textAppearanceLarge"></TextView>
+                <Spinner android:layout_height="wrap_content" android:layout_width="match_parent" android:layout_weight="1" android:id="@+id/spnLocation"></Spinner>
+            </LinearLayout>
+            <Button android:text="Aggiungi" android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/btnAggiungi2"></Button>
+        </LinearLayout>
+    </ScrollView>
+    
+</LinearLayout>
