@@ -15,7 +15,7 @@
             </LinearLayout>
             <LinearLayout android:layout_height="wrap_content" android:layout_width="match_parent" android:weightSum="1" android:id="@+id/linearLayout3">
                 <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/textView2" android:text="Volume suoneria:" android:textAppearance="?android:attr/textAppearanceLarge"></TextView>
-                <Spinner android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_weight="1" android:id="@+id/spinner1"></Spinner>
+                <Spinner android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_weight="1" android:id="@+id/spnRingVolume"></Spinner>
             </LinearLayout>
             <LinearLayout android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/linearLayout4">
                 <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/textView3" android:text="Wireless:" android:textAppearance="?android:attr/textAppearanceLarge"></TextView>
@@ -40,7 +40,7 @@
                 <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/textView9" android:text="Locazione" android:textAppearance="?android:attr/textAppearanceLarge"></TextView>
                 <Spinner android:layout_height="wrap_content" android:layout_width="match_parent" android:layout_weight="1" android:id="@+id/spnLocation"></Spinner>
             </LinearLayout>
-            <Button android:text="Aggiungi" android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/btnAggiungi2"></Button>
+            <Button android:text="Ok" android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/btnAggiungi2" android:onClick="addProfile"></Button>
         </LinearLayout>
     </ScrollView>
     

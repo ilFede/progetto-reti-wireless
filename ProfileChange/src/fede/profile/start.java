@@ -4,16 +4,26 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
+import android.content.Context;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 public class start extends Activity {
 	
 	private ProfileSet profileSet = new ProfileSet();
 	private String profileFile = "setting.dat";
+	private AudioManager audioManager;
+	private int ringStream;
+	private int maxVolume;
 	
 	//Ascoltatori
 	public void ciao(View v){
@@ -26,16 +36,76 @@ public class start extends Activity {
 	        setContentView(tv);
 		}
 	}
+	
+	//Apre la finestra di inserimento e modifica profili
+	public void openAddView(View v){
+		setContentView(R.layout.add);
+		try{
+			List<CharSequence> itemListRingVolume = new ArrayList<CharSequence>();
+	    	for (int i = 0; i <= maxVolume; i++){
+	    		itemListRingVolume.add("" + i);
+	    	}
+	    	ArrayAdapter<CharSequence> adapterRingVolume = new ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_item, itemListRingVolume);
+	        adapterRingVolume.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+	    	((Spinner) findViewById(R.id.spnRingVolume)).setAdapter(adapterRingVolume);
+	    	//spnWirelessSet
+	    	List<CharSequence> itemListWirelessSet = new ArrayList<CharSequence>();
+	    	itemListWirelessSet.add("Accesa");
+	    	itemListWirelessSet.add("Spenta");
+	    	ArrayAdapter<CharSequence> adapterWirelessSet = new ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_item, itemListWirelessSet);
+	        adapterWirelessSet.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+	    	((Spinner) findViewById(R.id.spnWirelessSet)).setAdapter(adapterWirelessSet);
+	    	//spnBlutoothSet
+	    	List<CharSequence> itemListBlutoothSet = new ArrayList<CharSequence>();
+	    	itemListBlutoothSet.add("Acceso");
+	    	itemListBlutoothSet.add("Spento");
+	    	ArrayAdapter<CharSequence> adapterBlutoothSet = new ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_item, itemListBlutoothSet);
+	        adapterBlutoothSet.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+	    	((Spinner) findViewById(R.id.spnBlutoothSet)).setAdapter(adapterBlutoothSet);
+	    	List<CharSequence> itemListLocation = new ArrayList<CharSequence>();
+	    	itemListLocation.add("Interno");
+	    	itemListLocation.add("Esterno");
+	    	ArrayAdapter<CharSequence> adapterLocation = new ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_item, itemListLocation);
+	        adapterLocation.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+	    	((Spinner) findViewById(R.id.spnLocation)).setAdapter(adapterLocation);
+		}catch(Exception e){
+			String s = e.getMessage() + e;
+			TextView tv = new TextView(this);
+	        tv.setText(s);
+	        setContentView(tv);
+		}
+		
+	}
+	
+	public void addProfile(View v){
+		String profileName = ((TextView) findViewById(R.id.txtProfName)).getText().toString();
+		String ringVolume = ((Spinner) findViewById(R.id.spnRingVolume)).getSelectedItem().toString();
+		String strWirelessSet = ((Spinner) findViewById(R.id.spnWirelessSet)).getSelectedItem().toString();
+		String strBlutoothSet = ((Spinner) findViewById(R.id.spnBlutoothSet)).getSelectedItem().toString();
+		boolean boolWirelessCondBool = ((CheckBox) findViewById(R.id.cbxWirelessCondBool)).isChecked();
+		String strWirelessCond = ((TextView) findViewById(R.id.txtWirelessCond)).getText().toString();
+		boolean boolBlutoothCondBool = ((CheckBox) findViewById(R.id.cbxBlutoothCondBool)).isChecked();
+		String strBlutoothCond = ((TextView) findViewById(R.id.txtBlutoothCond)).getText().toString();
+		String strLocation = ((Spinner) findViewById(R.id.spnLocation)).getSelectedItem().toString();
+		String s = profileName + ringVolume+strWirelessSet+strBlutoothSet+boolWirelessCondBool+strWirelessCond+boolBlutoothCondBool+strBlutoothCond+strLocation;
+		TextView tv = new TextView(this);
+        tv.setText(s);
+        setContentView(tv);
+	}
 	//Fine ascoltatori
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-    	super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState);
+		audioManager = (AudioManager) (getSystemService(Context.AUDIO_SERVICE));
+		setContentView(R.layout.homepage);
+	    ringStream = android.media.AudioManager.STREAM_RING;
+	    maxVolume =  audioManager.getStreamMaxVolume(ringStream);
     	try{
-    		readProfileToDisk();
+    		//readProfileToDisk();
     	}catch(Exception e){
     	}
-    	openHomepage();        
+    	//openHomepage();        
     }
     
     public void openHomepage(){
