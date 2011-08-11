@@ -17,6 +17,10 @@
                 <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/textView2" android:text="Volume suoneria:" android:textAppearance="?android:attr/textAppearanceLarge"></TextView>
                 <Spinner android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_weight="1" android:id="@+id/spnRingVolume"></Spinner>
             </LinearLayout>
+            <LinearLayout android:layout_height="wrap_content" android:id="@+id/linearLayout9" android:layout_width="match_parent">
+                <TextView android:layout_height="wrap_content" android:text="Vibrazione:" android:textAppearance="?android:attr/textAppearanceLarge" android:id="@+id/textView10" android:layout_width="wrap_content"></TextView>
+                <Spinner android:layout_height="wrap_content" android:layout_weight="1" android:layout_width="wrap_content" android:id="@+id/spnVibrationSet"></Spinner>
+            </LinearLayout>
             <LinearLayout android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/linearLayout4">
                 <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/textView3" android:text="Wireless:" android:textAppearance="?android:attr/textAppearanceLarge"></TextView>
                 <Spinner android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_weight="1" android:id="@+id/spnWirelessSet"></Spinner>
