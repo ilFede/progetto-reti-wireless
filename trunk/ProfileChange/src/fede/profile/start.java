@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import android.app.Activity;
 import android.content.Context;
@@ -48,6 +49,13 @@ public class start extends Activity {
 	    	ArrayAdapter<CharSequence> adapterRingVolume = new ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_item, itemListRingVolume);
 	        adapterRingVolume.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 	    	((Spinner) findViewById(R.id.spnRingVolume)).setAdapter(adapterRingVolume);
+	    	//spnVibrationSet
+	    	List<CharSequence> itemListVibrationSet = new ArrayList<CharSequence>();
+	    	itemListVibrationSet.add("Accesa");
+	    	itemListVibrationSet.add("Spenta");
+	    	ArrayAdapter<CharSequence> adapterVibrationSet = new ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_item, itemListVibrationSet);
+	    	adapterVibrationSet.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+	    	((Spinner) findViewById(R.id.spnVibrationSet)).setAdapter(adapterVibrationSet);
 	    	//spnWirelessSet
 	    	List<CharSequence> itemListWirelessSet = new ArrayList<CharSequence>();
 	    	itemListWirelessSet.add("Accesa");
@@ -79,20 +87,27 @@ public class start extends Activity {
 	
 	public void addProfile(View v){
 		String profileName = ((TextView) findViewById(R.id.txtProfName)).getText().toString();
-		String ringVolume = ((Spinner) findViewById(R.id.spnRingVolume)).getSelectedItem().toString();
-		String strWirelessSet = ((Spinner) findViewById(R.id.spnWirelessSet)).getSelectedItem().toString();
-		String strBlutoothSet = ((Spinner) findViewById(R.id.spnBlutoothSet)).getSelectedItem().toString();
-		boolean boolWirelessCondBool = ((CheckBox) findViewById(R.id.cbxWirelessCondBool)).isChecked();
-		String strWirelessCond = ((TextView) findViewById(R.id.txtWirelessCond)).getText().toString();
-		boolean boolBlutoothCondBool = ((CheckBox) findViewById(R.id.cbxBlutoothCondBool)).isChecked();
-		String strBlutoothCond = ((TextView) findViewById(R.id.txtBlutoothCond)).getText().toString();
-		String strLocation = ((Spinner) findViewById(R.id.spnLocation)).getSelectedItem().toString();
-		String s = profileName + ringVolume+strWirelessSet+strBlutoothSet+boolWirelessCondBool+strWirelessCond+boolBlutoothCondBool+strBlutoothCond+strLocation;
+		int ringVolume = Integer.parseInt(((Spinner) findViewById(R.id.spnRingVolume)).getSelectedItem().toString());
+		boolean vibrationSet = convStringToBool(((Spinner) findViewById(R.id.spnWirelessSet)).getSelectedItem().toString());
+		boolean wirelessSet = convStringToBool(((Spinner) findViewById(R.id.spnWirelessSet)).getSelectedItem().toString());
+		boolean blutoothSet = convStringToBool(((Spinner) findViewById(R.id.spnBlutoothSet)).getSelectedItem().toString());
+		boolean wirelessCondBool = ((CheckBox) findViewById(R.id.cbxWirelessCondBool)).isChecked();
+		ArrayList<String> wirelessCond = convStringToArray(((TextView) findViewById(R.id.txtWirelessCond)).getText().toString());
+		boolean blutoothCondBool = ((CheckBox) findViewById(R.id.cbxBlutoothCondBool)).isChecked();
+		ArrayList<String> blutoothCond = convStringToArray(((TextView) findViewById(R.id.txtBlutoothCond)).getText().toString());
+		boolean externCond = convStringToBool(((Spinner) findViewById(R.id.spnLocation)).getSelectedItem().toString());
+		String s = profileName + ringVolume+vibrationSet+wirelessSet+blutoothSet+wirelessCondBool+wirelessCond+blutoothCondBool+blutoothCond+externCond;
+		
+		Profile profile = new Profile(profileName, ringVolume, vibrationSet, wirelessSet, blutoothSet, wirelessCondBool, wirelessCond, blutoothCondBool, blutoothCond, externCond);
+		profileSet.insert(profile);
 		TextView tv = new TextView(this);
         tv.setText(s);
         setContentView(tv);
+        saveProfilesToDisck();
 	}
 	//Fine ascoltatori
+	
+	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -123,6 +138,10 @@ public class start extends Activity {
 			osw.close();
 			fOut.close();
     	}catch(Exception e){
+    		String s = e.getMessage() + e;
+			TextView tv = new TextView(this);
+	        tv.setText(s);
+	        setContentView(tv);
     	}
     }
 
@@ -139,6 +158,33 @@ public class start extends Activity {
 			fIn.close();
 		}catch(Exception e){
 		}
+	}
+	//Converte una Stringa in un array List spezzando la stringa
+	private ArrayList<String> convStringToArray(String s){
+		StringTokenizer token = new StringTokenizer(s, " ");
+		ArrayList<String> list = new ArrayList<String>();
+		while(token.hasMoreTokens()){
+			list.add(token.nextToken());
 		}
+		return list;
+	}
+	
+	//Converte un array in una stringa separando i valori con " "
+	private String convArrayToString(ArrayList<String> array){
+		String result = "";
+		for(int i = 0; i < array.size(); i++){
+			result = result + array.get(i);
+		}
+		return result;
+	}
+	
+	//Converte una stringa in un boolean
+	private boolean convStringToBool(String s){
+		boolean result = false;
+		if ((s.equalsIgnoreCase("acceso")) ||  (s.equalsIgnoreCase("accesa")) ||  (s.equalsIgnoreCase("esterno"))){
+			result = true;
+		}
+		return result;
+	}
 
 }
