@@ -2,11 +2,15 @@ package fede.profile;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 
 import android.app.Activity;
 import android.content.Context;
@@ -21,7 +25,7 @@ import android.widget.TextView;
 public class start extends Activity {
 	
 	private ProfileSet profileSet = new ProfileSet();
-	private String profileFile = "setting.dat";
+	private String profileFile = "settingsd.dat";
 	private AudioManager audioManager;
 	private int ringStream;
 	private int maxVolume;
@@ -41,7 +45,7 @@ public class start extends Activity {
 	//Apre la finestra di inserimento e modifica profili
 	public void openAddView(View v){
 		setContentView(R.layout.add);
-		try{
+		//try{
 			List<CharSequence> itemListRingVolume = new ArrayList<CharSequence>();
 	    	for (int i = 0; i <= maxVolume; i++){
 	    		itemListRingVolume.add("" + i);
@@ -76,12 +80,12 @@ public class start extends Activity {
 	    	ArrayAdapter<CharSequence> adapterLocation = new ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_item, itemListLocation);
 	        adapterLocation.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 	    	((Spinner) findViewById(R.id.spnLocation)).setAdapter(adapterLocation);
-		}catch(Exception e){
-			String s = e.getMessage() + e;
-			TextView tv = new TextView(this);
-	        tv.setText(s);
-	        setContentView(tv);
-		}
+		//}catch(Exception e){
+			//String s = e.getMessage() + e;
+			//TextView tv = new TextView(this);
+	        //tv.setText(s);
+	       // setContentView(tv);
+		//}
 		
 	}
 	
@@ -100,10 +104,20 @@ public class start extends Activity {
 		
 		Profile profile = new Profile(profileName, ringVolume, vibrationSet, wirelessSet, blutoothSet, wirelessCondBool, wirelessCond, blutoothCondBool, blutoothCond, externCond);
 		profileSet.insert(profile);
-		TextView tv = new TextView(this);
-        tv.setText(s);
-        setContentView(tv);
-        saveProfilesToDisck();
+		//TextView tv = new TextView(this);
+        //tv.setText(s);
+        //setContentView(tv);
+		try{
+			saveProfilesToDisck();
+			//TextView tv = new TextView(this);
+	        //tv.setText(s);
+	        //setContentView(tv);
+		}catch(Exception e){
+			s = e.getMessage() + e + e.getStackTrace();
+			TextView tv = new TextView(this);
+	        tv.setText(s);
+	        setContentView(tv);
+		}
 	}
 	//Fine ascoltatori
 	
@@ -128,21 +142,17 @@ public class start extends Activity {
     }
     
     //Salva i proili su disco, da modificare perchè bisogna passare la stinga al profile Set e si deve arrangiare
-    public void saveProfilesToDisck(){
-    	try{
-	    	String profileStr = profileSet.saveProfilesToString();
-	    	FileOutputStream fOut = openFileOutput(profileFile,MODE_PRIVATE); 
-			OutputStreamWriter osw = new OutputStreamWriter(fOut);
-			osw.write(profileStr);
-			osw.flush();
-			osw.close();
-			fOut.close();
-    	}catch(Exception e){
-    		String s = e.getMessage() + e;
-			TextView tv = new TextView(this);
-	        tv.setText(s);
-	        setContentView(tv);
-    	}
+    public void saveProfilesToDisck() throws IOException, TransformerException, ParserConfigurationException{
+    	String profileStr = profileSet.saveProfilesToString();
+    	TextView tv = new TextView(this);
+        tv.setText("Profilo: " + profileStr);
+        setContentView(tv);
+    	FileOutputStream fOut = openFileOutput(profileFile,MODE_PRIVATE); 
+		OutputStreamWriter osw = new OutputStreamWriter(fOut);
+		osw.write(profileStr);
+		osw.flush();
+		osw.close();
+		fOut.close();
     }
 
 	public void readProfileToDisk(){

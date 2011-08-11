@@ -16,6 +16,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -45,6 +46,7 @@ public class ProfileSet {
 	public void deleteProfile(int index){
 		if (index < size){
 			profileSet.remove(index);
+			size -= 1;
 		}
 	}
 	
@@ -60,28 +62,17 @@ public class ProfileSet {
 		return null;
 	}
 	
-	public String saveProfilesToString(){
-    	try{
-	    	Element profileEl = convProfilesToXml();
-	    	String profileStr = convXmlToString(profileEl);
-	    	return profileStr;
-    	}catch(Exception e){
-    		return null;
-    	}
+	public String saveProfilesToString() throws TransformerException, ParserConfigurationException{
+    	Element profileEl = convProfilesToXml();
+    	String profileStr = convXmlToString(profileEl);
+    	return profileStr;
     }
 	
-	public void readProfileToString(String profileStr){
+	public void readProfileToString(String profileStr) throws SAXException, IOException, ParserConfigurationException{
 		Document doc;
-		try {
-			doc = convStringToXml(profileStr);
-			readProfilesFromXml(doc);
-		} catch (SAXException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
-		}
+		doc = convStringToXml(profileStr);
+		readProfilesFromXml(doc);
+
 	}
 	
 	//Crea il set di profili da un Document XML
@@ -93,64 +84,69 @@ public class ProfileSet {
 	}
 	
 	//Converet i profili in un file xml
-	public Element convProfilesToXml(){
-		try{
-			DocumentBuilderFactory dbfac = DocumentBuilderFactory.newInstance();
-			DocumentBuilder docBuilder = dbfac.newDocumentBuilder();
-			Document doc = docBuilder.newDocument();
-			//create the root element and add it to the document
-			Element root = doc.createElement("profileList");
-			
-			for(int i= 0; i<profileSet.size(); i++){
-				Profile prof = profileSet.get(i);
-				Element profileNode = doc.createElement("profile");
-				//Creo il nodo profileName
-				Element profileName = doc.createElement("profileName");
-				profileName.setNodeValue(prof.getProfileName());
-				//Creo il nodo ringVolume
-				Element ringVolume = doc.createElement("ringVolume");
-				ringVolume.setNodeValue("" + prof.getRingVolume());
-				//Creo il nodo vibrationSet
-				Element vibrationSet = doc.createElement("vibrationSet");
-				vibrationSet.setNodeValue("" + prof.getVibrationSet());
-				//Creo il nodo wirelessSet
-				Element wirelessSet = doc.createElement("wirelessSet");
-				wirelessSet.setNodeValue("" + prof.getWirelessSet());
-			    //Creo il nodo blutoothSet
-				Element blutoothSet = doc.createElement("blutoothSet");
-				blutoothSet.setNodeValue("" + prof.getBlutoothSet());
-				//Creo il nodo wirelessCondBool
-				Element wirelessCondBool = doc.createElement("wirelessCondBool");
-				wirelessCondBool.setNodeValue("" + prof.getWirelessCondBool());
-				//Creo il nodo wirelessCond
-				Element wirelessCond = doc.createElement("wirelessCond");
-				wirelessCond.setNodeValue(convArrayToString(prof.getWirelessCond()));
-				//Creo il nodo blutoothCondBool
-				Element blutoothCondBool = doc.createElement("blutoothCondBool");
-				blutoothCondBool.setNodeValue("" + prof.getBlutoothCondBool());
-				//Creo il nodo blutoothCond
-				Element blutoothCond = doc.createElement("blutoothCond");
-				blutoothCond.setNodeValue(convArrayToString(prof.getBlutoothCond()));
-				//Creo il nodo externalCond
-				Element externalCond = doc.createElement("externalCond");
-				externalCond.setNodeValue("" + prof.getExternCond());
-				//Appendo i nodi
-				profileNode.appendChild(profileName);
-				profileNode.appendChild(ringVolume);
-				profileNode.appendChild(vibrationSet);
-				profileNode.appendChild(wirelessSet);
-				profileNode.appendChild(blutoothSet);
-				profileNode.appendChild(wirelessCondBool);
-				profileNode.appendChild(wirelessCond);
-				profileNode.appendChild(blutoothCondBool);
-				profileNode.appendChild(blutoothCond);
-				profileNode.appendChild(externalCond);
-				root.appendChild(profileNode);
-			}
-			return root;
-		}catch(Exception e){
-			return null;
+	public Element convProfilesToXml() throws ParserConfigurationException{
+		org.w3c.dom.Document xmldoc = null;
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        DOMImplementation impl = builder.getDOMImplementation();
+        // Document.
+        xmldoc = impl.createDocument(null, "certSigned", null);
+        // Root element.
+        Element root = xmldoc.getDocumentElement();
+        
+		DocumentBuilderFactory dbfac = DocumentBuilderFactory.newInstance();
+		DocumentBuilder docBuilder = dbfac.newDocumentBuilder();
+		Document doc = docBuilder.newDocument();
+		//create the root element and add it to the document
+		//Element root = doc.createElement("profileList");
+		
+		for(int i= 0; i<profileSet.size(); i++){
+			Profile prof = profileSet.get(i);
+			Element profileNode = doc.createElement("profile");
+			//Creo il nodo profileName
+			Element profileName = doc.createElement("profileName");
+			profileName.setNodeValue(prof.getProfileName());
+			//Creo il nodo ringVolume
+			Element ringVolume = doc.createElement("ringVolume");
+			ringVolume.setNodeValue("" + prof.getRingVolume());
+			//Creo il nodo vibrationSet
+			Element vibrationSet = doc.createElement("vibrationSet");
+			vibrationSet.setNodeValue("" + prof.getVibrationSet());
+			//Creo il nodo wirelessSet
+			Element wirelessSet = doc.createElement("wirelessSet");
+			wirelessSet.setNodeValue("" + prof.getWirelessSet());
+		    //Creo il nodo blutoothSet
+			Element blutoothSet = doc.createElement("blutoothSet");
+			blutoothSet.setNodeValue("" + prof.getBlutoothSet());
+			//Creo il nodo wirelessCondBool
+			Element wirelessCondBool = doc.createElement("wirelessCondBool");
+			wirelessCondBool.setNodeValue("" + prof.getWirelessCondBool());
+			//Creo il nodo wirelessCond
+			Element wirelessCond = doc.createElement("wirelessCond");
+			wirelessCond.setNodeValue(convArrayToString(prof.getWirelessCond()));
+			//Creo il nodo blutoothCondBool
+			Element blutoothCondBool = doc.createElement("blutoothCondBool");
+			blutoothCondBool.setNodeValue("" + prof.getBlutoothCondBool());
+			//Creo il nodo blutoothCond
+			Element blutoothCond = doc.createElement("blutoothCond");
+			blutoothCond.setNodeValue(convArrayToString(prof.getBlutoothCond()));
+			//Creo il nodo externalCond
+			Element externalCond = doc.createElement("externalCond");
+			externalCond.setNodeValue("" + prof.getExternCond());
+			//Appendo i nodi
+			profileNode.appendChild(profileName);
+			profileNode.appendChild(ringVolume);
+			profileNode.appendChild(vibrationSet);
+			profileNode.appendChild(wirelessSet);
+			profileNode.appendChild(blutoothSet);
+			profileNode.appendChild(wirelessCondBool);
+			profileNode.appendChild(wirelessCond);
+			profileNode.appendChild(blutoothCondBool);
+			profileNode.appendChild(blutoothCond);
+			profileNode.appendChild(externalCond);
+			root.appendChild(profileNode);
 		}
+		return root;		
 	}
 	
 	//Converte un nodo in un profilo
