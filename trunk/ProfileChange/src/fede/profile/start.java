@@ -124,7 +124,8 @@ public class start extends Activity {
 	
     /** Called when the activity is first created. */
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState){
+    	readProfileToDisk();
 		super.onCreate(savedInstanceState);
 		audioManager = (AudioManager) (getSystemService(Context.AUDIO_SERVICE));
 		setContentView(R.layout.homepage);
@@ -147,7 +148,7 @@ public class start extends Activity {
     	TextView tv = new TextView(this);
         tv.setText("Profilo: " + profileStr);
         setContentView(tv);
-    	FileOutputStream fOut = openFileOutput(profileFile,MODE_PRIVATE); 
+    	FileOutputStream fOut = openFileOutput("prova.dat",MODE_PRIVATE); 
 		OutputStreamWriter osw = new OutputStreamWriter(fOut);
 		osw.write(profileStr);
 		osw.flush();
