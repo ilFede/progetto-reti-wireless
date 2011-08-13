@@ -12,26 +12,29 @@ import java.util.StringTokenizer;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
+import org.xml.sax.SAXException;
+
 import android.app.Activity;
 import android.content.Context;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 public class start extends Activity {
 	
-	private ProfileSet profileSet = new ProfileSet();
-	private String profileFile = "settingsd.dat";
+	private ProfileSet profileSet;
+	private String profileFile = "prova.dat";
 	private AudioManager audioManager;
 	private int ringStream;
 	private int maxVolume;
 	
 	//Ascoltatori
-	public void ciao(View v){
+	/**public void ciao(View v){
 		try{
 			((TextView) findViewById(R.id.textView2)).setText("ciao");
 		}catch(Exception e){
@@ -40,7 +43,7 @@ public class start extends Activity {
 	        tv.setText(s);
 	        setContentView(tv);
 		}
-	}
+	}*/
 	
 	//Apre la finestra di inserimento e modifica profili
 	public void openAddView(View v){
@@ -80,15 +83,9 @@ public class start extends Activity {
 	    	ArrayAdapter<CharSequence> adapterLocation = new ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_item, itemListLocation);
 	        adapterLocation.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 	    	((Spinner) findViewById(R.id.spnLocation)).setAdapter(adapterLocation);
-		//}catch(Exception e){
-			//String s = e.getMessage() + e;
-			//TextView tv = new TextView(this);
-	        //tv.setText(s);
-	       // setContentView(tv);
-		//}
-		
 	}
 	
+	//Aggiunge un profilo
 	public void addProfile(View v){
 		String profileName = ((TextView) findViewById(R.id.txtProfName)).getText().toString();
 		int ringVolume = Integer.parseInt(((Spinner) findViewById(R.id.spnRingVolume)).getSelectedItem().toString());
@@ -100,24 +97,46 @@ public class start extends Activity {
 		boolean blutoothCondBool = ((CheckBox) findViewById(R.id.cbxBlutoothCondBool)).isChecked();
 		ArrayList<String> blutoothCond = convStringToArray(((TextView) findViewById(R.id.txtBlutoothCond)).getText().toString());
 		boolean externCond = convStringToBool(((Spinner) findViewById(R.id.spnLocation)).getSelectedItem().toString());
-		String s = profileName + ringVolume+vibrationSet+wirelessSet+blutoothSet+wirelessCondBool+wirelessCond+blutoothCondBool+blutoothCond+externCond;
+		//String s = profileName + ringVolume+vibrationSet+wirelessSet+blutoothSet+wirelessCondBool+wirelessCond+blutoothCondBool+blutoothCond+externCond;
 		
 		Profile profile = new Profile(profileName, ringVolume, vibrationSet, wirelessSet, blutoothSet, wirelessCondBool, wirelessCond, blutoothCondBool, blutoothCond, externCond);
 		profileSet.insert(profile);
-		//TextView tv = new TextView(this);
-        //tv.setText(s);
-        //setContentView(tv);
+		
 		try{
-			saveProfilesToDisck();
-			//TextView tv = new TextView(this);
-	        //tv.setText(s);
-	        //setContentView(tv);
+			saveProfilesToDisk();
 		}catch(Exception e){
-			s = e.getMessage() + e + e.getStackTrace();
-			TextView tv = new TextView(this);
-	        tv.setText(s);
-	        setContentView(tv);
 		}
+		openHomepage();
+	}
+	
+	//Apre la pagina per eliminare un profilo
+	public void openRemoveView(View v){
+		setContentView(R.layout.remove);
+		List<CharSequence> itemListRemoveProfile = new ArrayList<CharSequence>();
+		//ArrayList<String> profNameList = profileSet.getProfNameList();
+    	for (int i = 0; i < profileSet.getSize(); i++){
+    		itemListRemoveProfile.add(profileSet.getProfile(i).getProfileName());
+    	}
+    	ArrayAdapter<CharSequence> adapterRemoveProfile = new ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_item, itemListRemoveProfile);
+        adapterRemoveProfile.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+    	((Spinner) findViewById(R.id.spnProfile)).setAdapter(adapterRemoveProfile);
+	}
+	
+	//Rimuove un profilo()
+	public void removeProfile(View v){
+		String profile = ((Spinner) findViewById(R.id.spnProfile)).getSelectedItem().toString();
+		profileSet.deleteProfile(profile);
+		try{
+			saveProfilesToDisk();
+		}catch(Exception e){
+		}
+		openHomepage();
+
+	}
+	
+	//Apre la homepage
+	public void openHomepage(View v){
+		openHomepage();
 	}
 	//Fine ascoltatori
 	
@@ -125,29 +144,33 @@ public class start extends Activity {
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState){
+    	profileSet = new ProfileSet();
     	readProfileToDisk();
 		super.onCreate(savedInstanceState);
-		audioManager = (AudioManager) (getSystemService(Context.AUDIO_SERVICE));
-		setContentView(R.layout.homepage);
-	    ringStream = android.media.AudioManager.STREAM_RING;
-	    maxVolume =  audioManager.getStreamMaxVolume(ringStream);
-    	try{
+		//audioManager = (AudioManager) (getSystemService(Context.AUDIO_SERVICE));
+		//setContentView(R.layout.homepage);
+	    //ringStream = android.media.AudioManager.STREAM_RING;
+	    //maxVolume =  audioManager.getStreamMaxVolume(ringStream);
+    	//try{
     		//readProfileToDisk();
-    	}catch(Exception e){
-    	}
-    	//openHomepage();        
+    	//}catch(Exception e){
+    	//}
+    	openHomepage();        
     }
     
+    //Apre la pagina principale
     public void openHomepage(){
         setContentView(R.layout.homepage);
+        if (profileSet.isEmpty()){
+        	((Button) findViewById(R.id.btnAggiungi)).setClickable(false);
+        }else{
+        	((Button) findViewById(R.id.btnAggiungi)).setClickable(true);
+        }
     }
     
     //Salva i proili su disco, da modificare perchè bisogna passare la stinga al profile Set e si deve arrangiare
-    public void saveProfilesToDisck() throws IOException, TransformerException, ParserConfigurationException{
+    public void saveProfilesToDisk() throws IOException, TransformerException, ParserConfigurationException{
     	String profileStr = profileSet.saveProfilesToString();
-    	TextView tv = new TextView(this);
-        tv.setText("Profilo: " + profileStr);
-        setContentView(tv);
     	FileOutputStream fOut = openFileOutput("prova.dat",MODE_PRIVATE); 
 		OutputStreamWriter osw = new OutputStreamWriter(fOut);
 		osw.write(profileStr);
@@ -156,6 +179,7 @@ public class start extends Activity {
 		fOut.close();
     }
 
+    //Carica i profili salvati
 	public void readProfileToDisk(){
 		try{
 			FileInputStream fIn = openFileInput(profileFile);
@@ -167,8 +191,26 @@ public class start extends Activity {
 			profileSet.readProfileToString(profileStr);
 			osr.close();
 			fIn.close();
-		}catch(Exception e){
+		}catch(IOException e){
+			String s = e.getMessage() + e +e.getCause();
+			TextView tv = new TextView(this);
+	        tv.setText(s);
+	        setContentView(tv);
+	        System.out.print(s);
+		}catch(ParserConfigurationException e){
+			String s = e.getMessage() + e +e.getCause();
+			TextView tv = new TextView(this);
+	        tv.setText(s);
+	        setContentView(tv);
+	        System.out.print(s);
+		}catch(SAXException e){
+			String s = e.getMessage() + e +e.getCause();
+			TextView tv = new TextView(this);
+	        tv.setText(s);
+	        setContentView(tv);
+	        System.out.print(s);
 		}
+	        
 	}
 	//Converte una Stringa in un array List spezzando la stringa
 	private ArrayList<String> convStringToArray(String s){
