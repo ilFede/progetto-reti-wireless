@@ -2,8 +2,7 @@
 <LinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:orientation="vertical"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent" android:gravity="center">
+  android:gravity="center" android:layout_height="wrap_content" android:layout_width="wrap_content">
     <ScrollView android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/scrollView1">
         <LinearLayout android:layout_height="wrap_content" android:layout_width="match_parent" android:orientation="vertical" android:id="@+id/linearLayout8">
             <TextView android:layout_height="wrap_content" android:id="@+id/textView5" android:text="  ---Impostazioni del profilo---" android:textAppearance="?android:attr/textAppearanceLarge" android:layout_width="match_parent" android:layout_gravity="fill"></TextView>
@@ -44,7 +43,10 @@
                 <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/textView9" android:text="Locazione" android:textAppearance="?android:attr/textAppearanceLarge"></TextView>
                 <Spinner android:layout_height="wrap_content" android:layout_width="match_parent" android:layout_weight="1" android:id="@+id/spnLocation"></Spinner>
             </LinearLayout>
-            <Button android:text="Ok" android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/btnAggiungi2" android:onClick="addProfile"></Button>
+            <LinearLayout android:layout_height="wrap_content" android:id="@+id/linearLayout10" android:layout_width="match_parent">
+                <Button android:id="@+id/btnAggiungi2" android:onClick="addProfile" android:text="Ok" android:layout_height="wrap_content" android:layout_width="146dp"></Button>
+                <Button android:id="@+id/button1" android:layout_height="wrap_content" android:text="Annulla" android:onClick="openHomepage" android:layout_width="0dp" android:layout_weight="1"></Button>
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
     

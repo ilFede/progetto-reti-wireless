@@ -29,27 +29,50 @@ public class ProfileSet {
 	private ArrayList<Profile> profileSet;
 	private int size;
 	
+	//Costruttore
 	public ProfileSet(){
 		profileSet = new ArrayList<Profile>();
 		size = 0;
 	}
 	
+	//Controlla se non ci sono profili
 	public boolean isEmpty(){
 		return profileSet.isEmpty();
 	}
 	
+	//Inserisce un nuovo profilo
 	public void insert(Profile newProfile){
 		profileSet.add(newProfile);
 		size += 1;
 	}
 	
-	public void deleteProfile(int index){
-		if (index < size){
+	//Cancella un profilo dato l'indice
+	private void deleteProfile(int index){
+		if ((index < size)&&(index >= 0)){
 			profileSet.remove(index);
 			size -= 1;
 		}
 	}
 	
+	//Cancella un profilo dato il nome
+	public void deleteProfile(String profName){
+		for(int i = 0; i < size; i++){
+			if (profileSet.get(i).getProfileName().equalsIgnoreCase(profName)){
+				deleteProfile(i);
+			}
+		}
+	}
+	
+	//Restituisce l'elenco dei nomi dei profili
+	public ArrayList<String> getProfNameList(){
+		ArrayList<String> profNameList = new ArrayList<String>();
+		for(int i = 0; i < size; i++){
+			profNameList.add(profileSet.get(i).getProfileName());
+		}
+		return profNameList;
+	}
+	
+	//Restituisce un profilo dato l'indice
 	public Profile getProfile(int index){
 		if (index < size){
 			return profileSet.get(index);
@@ -58,32 +81,93 @@ public class ProfileSet {
 		}
 	}
 	
+	//Restituisce il profilo da impostare in base alle condizioni
 	public Profile getDinamicProfile(){
 		return null;
 	}
 	
+	//Restituisce il numero di profili salvati
+	public int getSize(){
+		return size;
+	}
+	
+	//Salva il mprofilo in una stringa xml
 	public String saveProfilesToString() throws TransformerException, ParserConfigurationException{
     	Element profileEl = convProfilesToXml();
     	String profileStr = convXmlToString(profileEl);
     	return profileStr;
     }
 	
+	//Carica i profili da una stringa xml
 	public void readProfileToString(String profileStr) throws SAXException, IOException, ParserConfigurationException{
-		Document doc;
-		doc = convStringToXml(profileStr);
-		readProfilesFromXml(doc);
+		try{
+			Document doc;
+			doc = convStringToXml(profileStr);
+			readProfilesFromXml(doc);
+		}catch(TransformerException e){
+		}
 
 	}
 	
 	//Crea il set di profili da un Document XML
-	public void readProfilesFromXml(Document xmlProfile){
-		NodeList list = xmlProfile.getElementsByTagName("profile");
-		for(int i = 0; i < list.getLength(); i++){
-			insert(convNodeToProfile(list.item(i)));
+	@SuppressWarnings("unchecked")
+	public void readProfilesFromXml(Document xmlProfile) throws ParserConfigurationException, TransformerException{
+		NodeList profileList = xmlProfile.getElementsByTagName("profile");
+		int numProf = profileList.getLength(); //Numero di profili trovati
+		//Creo degli array con le impostazioni dei profili
+		String profileNameArray[] = new String[numProf];
+		int ringVolumeArray[] = new int[numProf];
+		boolean vibrationSetArray[] = new boolean[numProf];
+		boolean wirelessSetArray[] = new boolean[numProf];
+		boolean blutoothSetArray[] = new boolean[numProf];
+		boolean wirelessCondBoolArray[] = new boolean[numProf];
+		ArrayList<String> wirelessCondArray[] = new ArrayList[numProf];
+		boolean blutoothCondBoolArray[] = new boolean[numProf];
+		ArrayList<String> blutoothCondArray[] = new ArrayList[numProf];
+		boolean externalCondBoolArray[] = new boolean[numProf];
+		
+		NodeList profileNameList = xmlProfile.getElementsByTagName("profileName");
+		NodeList ringVolumeList = xmlProfile.getElementsByTagName("ringVolume");
+		NodeList vibrationSetList = xmlProfile.getElementsByTagName("vibrationSet");
+		NodeList wirelessSetList = xmlProfile.getElementsByTagName("wirelessSet");
+		NodeList blutoothSetList = xmlProfile.getElementsByTagName("blutoothSet");
+		NodeList wirelessCondBoolList = xmlProfile.getElementsByTagName("wirelessCondBool");
+		NodeList wirelessCondList = xmlProfile.getElementsByTagName("wirelessCond");
+		NodeList blutoothCondBoolList = xmlProfile.getElementsByTagName("blutoothCondBool");
+		NodeList blutoothCondList = xmlProfile.getElementsByTagName("blutoothCond");
+		NodeList externalCondBoolList = xmlProfile.getElementsByTagName("externalCondBool");
+		
+		for(int i = 0; i < numProf; i++){
+			try{
+				profileNameArray[i] = profileNameList.item(i).getFirstChild().getTextContent();
+			}catch(Exception e){
+				profileNameArray[i] = "";
+			}
+	    	ringVolumeArray[i] = Integer.parseInt(ringVolumeList.item(i).getFirstChild().getTextContent());
+	    	vibrationSetArray[i] = convStringToBool(vibrationSetList.item(i).getFirstChild().getTextContent());
+	    	wirelessSetArray[i] = convStringToBool(wirelessSetList.item(i).getFirstChild().getTextContent());
+	    	blutoothSetArray[i] = convStringToBool(blutoothSetList.item(i).getFirstChild().getTextContent());
+	    	wirelessCondBoolArray[i] = convStringToBool(wirelessCondBoolList.item(i).getFirstChild().getTextContent());
+	    	try{
+	    		wirelessCondArray[i] = convStringToArray(wirelessCondList.item(i).getFirstChild().getTextContent());
+	    	}catch(Exception e){
+	    		wirelessCondArray[i] = convStringToArray("");
+	    	}
+	    	wirelessCondBoolArray[i] = convStringToBool(blutoothCondBoolList.item(i).getFirstChild().getTextContent());
+	    	try{
+	  	    	blutoothCondArray[i] = convStringToArray(blutoothCondList.item(i).getFirstChild().getTextContent());
+	    	}catch(Exception e){
+	    		blutoothCondArray[i] =  convStringToArray("");
+	    	}
+	    	externalCondBoolArray[i] = convStringToBool(externalCondBoolList.item(i).getFirstChild().getTextContent());
+	    	
+	    	Profile newProfile = new Profile(profileNameArray[i], ringVolumeArray[i], vibrationSetArray[i], wirelessSetArray[i], blutoothSetArray[i], wirelessCondBoolArray[i], wirelessCondArray[i], blutoothCondBoolArray[i], blutoothCondArray[i], externalCondBoolArray[i]);
+	    	insert(newProfile);
+
 		}
 	}
 	
-	//Converet i profili in un file xml
+	//Converte i profili in un file xml
 	public Element convProfilesToXml() throws ParserConfigurationException{
 		DocumentBuilderFactory dbfac = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder = dbfac.newDocumentBuilder();
@@ -121,9 +205,9 @@ public class ProfileSet {
 			//Creo il nodo blutoothCond
 			Element blutoothCond = doc.createElement("blutoothCond");
 			blutoothCond.appendChild(doc.createTextNode(convArrayToString(prof.getBlutoothCond())));
-			//Creo il nodo externalCond
-			Element externalCond = doc.createElement("externalCond");
-			externalCond.appendChild(doc.createTextNode("" + prof.getExternCond()));
+			//Creo il nodo externalCondBool
+			Element externalCondBool = doc.createElement("externalCondBool");
+			externalCondBool.appendChild(doc.createTextNode("" + prof.getExternCond()));
 			//Appendo i nodi
 			profileNode.appendChild(profileName);
 			profileNode.appendChild(ringVolume);
@@ -134,17 +218,35 @@ public class ProfileSet {
 			profileNode.appendChild(wirelessCond);
 			profileNode.appendChild(blutoothCondBool);
 			profileNode.appendChild(blutoothCond);
-			profileNode.appendChild(externalCond);
+			profileNode.appendChild(externalCondBool);
 			root.appendChild(profileNode);
 		}
 		return root;		
 	}
 	
 	//Converte un nodo in un profilo
-	public Profile convNodeToProfile(Node profileNode){
+	/**public Profile convNodeToProfile(Node profileNode) throws ParserConfigurationException, TransformerException{
+		//profileNode.
+		//profileNode.normalize();
 		NodeList nodeList = profileNode.getChildNodes();
 		//Nome profilo
-		String profileName = nodeList.item(0).getChildNodes().item(0).getNodeValue();
+		//Node a = nodeList.item(0);
+	    //Node b = a.getChildNodes().item(0);
+	    //Creo il document per un lettura più semplice 
+		DocumentBuilderFactory dbfac = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder = dbfac.newDocumentBuilder();
+        Document doc = docBuilder.newDocument();
+		Element root = doc.createElement("singleProfile");
+		Node node = doc.createTextNode("sfdaf");
+		root.appendChild(node);
+		try{
+			root.appendChild(profileNode);
+		}catch(Exception e){
+		}
+	    //Ho cerato un documento, ora posso ottenere nodi tramite il nome
+    	Node a = doc.getElementsByTagName("profileName").item(0);
+    	Node b = a.getChildNodes().item(0);
+    	String profileName = b.getTextContent();
 		//Volume suoneria
 		int ringVolume = Integer.parseInt(nodeList.item(1).getChildNodes().item(0).getNodeValue());
 		//Setup della vibrazione
@@ -185,12 +287,12 @@ public class ProfileSet {
 		ArrayList<String> blutoothCond = convStringToArray(tmp5);
 		//Condizioni del gps (elenco dispositivi da rilevare per attivare il profilo)
 		String tmp6 = nodeList.item(9).getChildNodes().item(0).getNodeValue();
-		boolean externalCond = true;
+		boolean externalCondBool = true;
 		if (tmp6.equals("no")){
-			externalCond = false;
+			externalCondBool = false;
 		}
-		return new Profile(profileName, ringVolume, vibrationSet,  wirelessSet, blutoothSet, wirelessCondBool, wirelessCond, blutoothCondBool, blutoothCond, externalCond);
-	}
+		return new Profile(profileName, ringVolume, vibrationSet,  wirelessSet, blutoothSet, wirelessCondBool, wirelessCond, blutoothCondBool, blutoothCond, externalCondBool);
+	}*/
 	
 	//Converte una stringa in un Document XML
 	protected Document convStringToXml(String s) throws SAXException, IOException, ParserConfigurationException{
@@ -217,7 +319,7 @@ public class ProfileSet {
 	
 	//Converte una Stringa in un array List spezzando la stringa
 	private ArrayList<String> convStringToArray(String s){
-		StringTokenizer token = new StringTokenizer(s, " ");
+		StringTokenizer token = new StringTokenizer(s, " ,;");
 		ArrayList<String> list = new ArrayList<String>();
 		while(token.hasMoreTokens()){
 			list.add(token.nextToken());
@@ -230,6 +332,15 @@ public class ProfileSet {
 		String result = "";
 		for(int i = 0; i < array.size(); i++){
 			result = result + array.get(i);
+		}
+		return result;
+	}
+	
+	//Converte una stringa in un boolean
+	private boolean convStringToBool(String s){
+		boolean result = false;
+		if ((s.equalsIgnoreCase("acceso")) ||  (s.equalsIgnoreCase("accesa")) ||  (s.equalsIgnoreCase("esterno")) || (s.equalsIgnoreCase("true"))){
+			result = true;
 		}
 		return result;
 	}
