@@ -9,7 +9,7 @@
         <TextView android:layout_width="wrap_content" android:id="@+id/TextView01" android:layout_height="wrap_content" android:text="                 "></TextView>
         <Button android:text="Avvia" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/btnAvvia"></Button>
         <TextView android:text="                  " android:id="@+id/textView1" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
-        <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Ferma" android:onClick="ciao" android:id="@+id/btnFerma"></Button>
+        <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Ferma" android:id="@+id/btnFerma"></Button>
     </LinearLayout>
     <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/textView2" android:textAppearance="?android:attr/textAppearanceSmall"></TextView>
     <ProgressBar android:id="@+id/progressBar1" android:layout_height="wrap_content" style="?android:attr/progressBarStyleHorizontal" android:layout_width="match_parent"></ProgressBar>
@@ -19,7 +19,7 @@
     <LinearLayout android:layout_width="match_parent" android:id="@+id/linearLayout2" android:layout_height="wrap_content" android:onClick="openAddView">
         <TextView android:text="       " android:id="@+id/textView4" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
         <Button android:text="Aggiungi" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/btnAggiungi" android:onClick="openAddView"></Button>
-        <Button android:text="Modifica" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/btnModifica" android:onClick="openModifyView"></Button>
+        <Button android:text="Mostra/Modifica" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/btnModifica" android:onClick="openModifyView"></Button>
         <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/textView3" android:text="          "></TextView>
         <Button android:text="Rimuovi" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/btnRimuovi" android:onClick="openRemoveView"></Button>
     </LinearLayout>
