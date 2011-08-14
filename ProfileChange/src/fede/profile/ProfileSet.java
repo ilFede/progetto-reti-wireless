@@ -16,10 +16,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -37,7 +35,7 @@ public class ProfileSet {
 	
 	//Controlla se non ci sono profili
 	public boolean isEmpty(){
-		return profileSet.isEmpty();
+		return size == 0;
 	}
 	
 	//Inserisce un nuovo profilo
@@ -79,6 +77,16 @@ public class ProfileSet {
 		}else{
 			return null;
 		}
+	}
+	
+	//Restituisce un profilo dato il nome
+	public Profile getProfile(String profName){
+		for(int i = 0; i < size; i++){
+			if (profileSet.get(i).getProfileName().equalsIgnoreCase(profName)){
+				return profileSet.get(i);
+			}
+		}
+		return null;
 	}
 	
 	//Restituisce il profilo da impostare in base alle condizioni
@@ -224,76 +232,6 @@ public class ProfileSet {
 		return root;		
 	}
 	
-	//Converte un nodo in un profilo
-	/**public Profile convNodeToProfile(Node profileNode) throws ParserConfigurationException, TransformerException{
-		//profileNode.
-		//profileNode.normalize();
-		NodeList nodeList = profileNode.getChildNodes();
-		//Nome profilo
-		//Node a = nodeList.item(0);
-	    //Node b = a.getChildNodes().item(0);
-	    //Creo il document per un lettura più semplice 
-		DocumentBuilderFactory dbfac = DocumentBuilderFactory.newInstance();
-        DocumentBuilder docBuilder = dbfac.newDocumentBuilder();
-        Document doc = docBuilder.newDocument();
-		Element root = doc.createElement("singleProfile");
-		Node node = doc.createTextNode("sfdaf");
-		root.appendChild(node);
-		try{
-			root.appendChild(profileNode);
-		}catch(Exception e){
-		}
-	    //Ho cerato un documento, ora posso ottenere nodi tramite il nome
-    	Node a = doc.getElementsByTagName("profileName").item(0);
-    	Node b = a.getChildNodes().item(0);
-    	String profileName = b.getTextContent();
-		//Volume suoneria
-		int ringVolume = Integer.parseInt(nodeList.item(1).getChildNodes().item(0).getNodeValue());
-		//Setup della vibrazione
-		String tmp3 = nodeList.item(2).getChildNodes().item(0).getNodeValue();
-		boolean vibrationSet = true;
-		if (tmp3.equals("false")){
-			vibrationSet = false;
-		}
-		//Setup della wireless
-		String tmp1 = nodeList.item(3).getChildNodes().item(0).getNodeValue();
-		boolean wirelessSet = true;
-		if (tmp1.equals("false")){
-			wirelessSet = false;
-		}
-		//Setup del blutooth
-		String tmp2 = nodeList.item(4).getChildNodes().item(0).getNodeValue();
-		boolean blutoothSet = true;
-		if (tmp2.equals("false")){
-			blutoothSet = false;
-		}
-		//Condizioni se considerare la wireless (se false non considero la condizione)
-		String tmp7 = nodeList.item(5).getChildNodes().item(0).getNodeValue();
-		boolean wirelessCondBool = true;
-		if (tmp7.equals("false")){
-			wirelessCondBool = false;
-		}
-		//Condizioni della wireless (elenco wireless da rilevare pe attivare il profilo)
-		String tmp4 = nodeList.item(6).getChildNodes().item(0).getNodeValue();
-		ArrayList<String> wirelessCond = convStringToArray(tmp4);
-		//Condizioni se considerare il blutooth
-		String tmp8 = nodeList.item(7).getChildNodes().item(0).getNodeValue();
-		boolean blutoothCondBool = true;
-		if (tmp8.equals("false")){
-			blutoothCondBool = false;
-		}
-		//Condizioni del blutooth (se false non considero la condizione)
-		String tmp5 = nodeList.item(8).getChildNodes().item(0).getNodeValue();
-		ArrayList<String> blutoothCond = convStringToArray(tmp5);
-		//Condizioni del gps (elenco dispositivi da rilevare per attivare il profilo)
-		String tmp6 = nodeList.item(9).getChildNodes().item(0).getNodeValue();
-		boolean externalCondBool = true;
-		if (tmp6.equals("no")){
-			externalCondBool = false;
-		}
-		return new Profile(profileName, ringVolume, vibrationSet,  wirelessSet, blutoothSet, wirelessCondBool, wirelessCond, blutoothCondBool, blutoothCond, externalCondBool);
-	}*/
-	
 	//Converte una stringa in un Document XML
 	protected Document convStringToXml(String s) throws SAXException, IOException, ParserConfigurationException{
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -327,11 +265,11 @@ public class ProfileSet {
 		return list;
 	}
 	
-	//Converte un array in una stringa separando i valori con " "
+	//Converte un array in una stringa separando i valori con " ,"
 	private String convArrayToString(ArrayList<String> array){
 		String result = "";
 		for(int i = 0; i < array.size(); i++){
-			result = result + array.get(i);
+			result = result + array.get(i) + ",";
 		}
 		return result;
 	}
