@@ -257,7 +257,7 @@ public class ProfileSet {
 	
 	//Converte una Stringa in un array List spezzando la stringa
 	private ArrayList<String> convStringToArray(String s){
-		StringTokenizer token = new StringTokenizer(s, " ,;");
+		StringTokenizer token = new StringTokenizer(s, " ,");
 		ArrayList<String> list = new ArrayList<String>();
 		while(token.hasMoreTokens()){
 			list.add(token.nextToken());

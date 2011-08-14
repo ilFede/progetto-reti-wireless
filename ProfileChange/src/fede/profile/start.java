@@ -29,23 +29,13 @@ import android.widget.TextView;
 public class start extends Activity {
 	
 	private ProfileSet profileSet;
-	private String profileFile = "prova.dat";
+	private String profileFile = "profiles.dat";
 	private AudioManager audioManager;
 	private int ringStream;
 	private int maxVolume;
 	
 	//Ascoltatori
-	/**public void ciao(View v){
-		try{
-			((TextView) findViewById(R.id.textView2)).setText("ciao");
-		}catch(Exception e){
-			String s = e.getMessage() + e;
-			TextView tv = new TextView(this);
-	        tv.setText(s);
-	        setContentView(tv);
-		}
-	}*/
-	
+		
 	//Apre la finestra di inserimento profili
 	public void openAddView(View v){
 		setContentView(R.layout.add);
@@ -155,7 +145,7 @@ public class start extends Activity {
     	//txtWirelessCond
     	((EditText) findViewById(R.id.txtWirelessCond)).setText(convArrayToString(profile.getWirelessCond()));
     	//cbxBlutoothCondBool
-    	((CheckBox) findViewById(R.id.cbxBlutoothCondBool)).setChecked(profile.getWirelessCondBool());
+    	((CheckBox) findViewById(R.id.cbxBlutoothCondBool)).setChecked(profile.getBlutoothCondBool());
     	//txtBlutoothCond
     	((EditText) findViewById(R.id.txtBlutoothCond)).setText(convArrayToString(profile.getBlutoothCond()));
     	//spnLocation
@@ -174,7 +164,7 @@ public class start extends Activity {
 	public void addProfile(View v){
 		String profileName = ((TextView) findViewById(R.id.txtProfName)).getText().toString();
 		int ringVolume = Integer.parseInt(((Spinner) findViewById(R.id.spnRingVolume)).getSelectedItem().toString());
-		boolean vibrationSet = convStringToBool(((Spinner) findViewById(R.id.spnWirelessSet)).getSelectedItem().toString());
+		boolean vibrationSet = convStringToBool(((Spinner) findViewById(R.id.spnVibrationSet)).getSelectedItem().toString());
 		boolean wirelessSet = convStringToBool(((Spinner) findViewById(R.id.spnWirelessSet)).getSelectedItem().toString());
 		boolean blutoothSet = convStringToBool(((Spinner) findViewById(R.id.spnBlutoothSet)).getSelectedItem().toString());
 		boolean wirelessCondBool = ((CheckBox) findViewById(R.id.cbxWirelessCondBool)).isChecked();
@@ -252,7 +242,7 @@ public class start extends Activity {
     //Salva i proili su disco, da modificare perchè bisogna passare la stinga al profile Set e si deve arrangiare
     public void saveProfilesToDisk() throws IOException, TransformerException, ParserConfigurationException{
     	String profileStr = profileSet.saveProfilesToString();
-    	FileOutputStream fOut = openFileOutput("prova.dat",MODE_PRIVATE); 
+    	FileOutputStream fOut = openFileOutput(profileFile,MODE_PRIVATE); 
 		OutputStreamWriter osw = new OutputStreamWriter(fOut);
 		osw.write(profileStr);
 		osw.flush();

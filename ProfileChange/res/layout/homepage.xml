@@ -17,10 +17,10 @@
     <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/textView5" android:textAppearance="?android:attr/textAppearanceLarge" android:text="          ---Gestione profili---"></TextView>
     <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/textView9" android:text="" android:textAppearance="?android:attr/textAppearanceMedium"></TextView>
     <LinearLayout android:layout_width="match_parent" android:id="@+id/linearLayout2" android:layout_height="wrap_content" android:onClick="openAddView">
-        <TextView android:text="       " android:id="@+id/textView4" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+        <TextView android:id="@+id/textView4" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="  "></TextView>
         <Button android:text="Aggiungi" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/btnAggiungi" android:onClick="openAddView"></Button>
         <Button android:text="Mostra/Modifica" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/btnModifica" android:onClick="openModifyView"></Button>
-        <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/textView3" android:text="          "></TextView>
+        <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/textView3" android:text="      "></TextView>
         <Button android:text="Rimuovi" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/btnRimuovi" android:onClick="openRemoveView"></Button>
     </LinearLayout>
     
