@@ -3,6 +3,7 @@ package fede.profile;
 import java.util.ArrayList;
 
 public class Profile {
+	
 	private String profileName;
 	private int ringVolume;
 	private boolean wirelessSet;
@@ -12,9 +13,9 @@ public class Profile {
 	private boolean wirelessCondBool; //true se le bisogna considerare le wireless trovate
 	private ArrayList<String> blutoothCond; //Dispositivi che devono essere ricevuti per attivare il profilo
 	private boolean blutoothCondBool; //true se bisogna considerare i dispositivi blutooth trovati
-	private boolean externCond; //Luogo (interno o esterno) in cui si deve essere per attivare il profilo
+	private String externCond; //Luogo (interno, estrerno o indifferente) in cui si deve essere per attivare il profilo
 	
-	public Profile(String profileName, int ringVolume, boolean vibrationSet, boolean wirelessSet, boolean blutoothSet, boolean wirelessCondBool, ArrayList<String> wirelessCond, boolean blutoothCondBool, ArrayList<String> blutoothCond, boolean externCond){
+	public Profile(String profileName, int ringVolume, boolean vibrationSet, boolean wirelessSet, boolean blutoothSet, boolean wirelessCondBool, ArrayList<String> wirelessCond, boolean blutoothCondBool, ArrayList<String> blutoothCond, String externCond){
 		this.profileName = profileName;
 		this.ringVolume = ringVolume;
 		this.vibrationSet = vibrationSet;
@@ -58,7 +59,7 @@ public class Profile {
 		return vibrationSet;
 	}
 	
-	public boolean getBlutoothSet(){
+	public boolean getBluetoothSet(){
 		return blutoothSet;
 	}
 	
@@ -70,11 +71,11 @@ public class Profile {
 		return wirelessCondBool;
 	}
 	
-	public ArrayList<String> getBlutoothCond(){
+	public ArrayList<String> getBluetoothCond(){
 		return blutoothCond;
 	}
 	
-	public boolean getBlutoothCondBool(){
+	public boolean getBluetoothCondBool(){
 		return blutoothCondBool;
 	}
 	
@@ -82,7 +83,7 @@ public class Profile {
 		return wirelessCond;
 	}
 	
-	public boolean getExternCond(){
+	public String getExternCond(){
 		return externCond;
 	}
 }
