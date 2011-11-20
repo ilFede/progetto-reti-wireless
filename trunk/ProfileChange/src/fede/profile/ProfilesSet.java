@@ -1,7 +1,11 @@
 package fede.profile;
 
 import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
@@ -21,14 +25,12 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-
-
-public class ProfileSet {
+public class ProfilesSet {
 	private ArrayList<Profile> profileSet;
 	private int size;
 	
 	//Costruttore
-	public ProfileSet(){
+	public ProfilesSet(){
 		profileSet = new ArrayList<Profile>();
 		size = 0;
 	}
@@ -89,9 +91,62 @@ public class ProfileSet {
 		return null;
 	}
 	
-	//Restituisce il profilo da impostare in base alle condizioni
-	public Profile getDinamicProfile(){
-		return null;
+	//Restituisce il profilo da impostare in base alle condizioni, questo codice invec sembra più per ottenere le informazioni, metterlo nel servizio 
+	public Profile getDinamicProfile(ArrayList<String> wirelessDect, ArrayList<String> bluetoothDect, String externCond){
+		int score = 0;
+		int maxScore = 0;
+		int bestProfile = 0;
+		//Controllo tutti i profili per troare il migliore
+		for (int i = 0; i < size; i++){
+			score = 0;
+			boolean wirelessOk = false;
+			boolean bluetoothOk = false;
+			boolean locationOk = false;
+			Profile temp = profileSet.get(i);
+			//Controllo punteggio per wireless
+			if (temp.getWirelessCondBool() == true){
+				ArrayList<String> wirelessCond = temp.getWirelessCond();
+				for(int j = 0; j < wirelessCond.size(); j++){
+					for(int k = 0; k < bluetoothDect.size(); k++){
+						if ((wirelessCond.get(j)).equals(wirelessDect.get(k))){
+							wirelessOk = true;
+							score+= 1;
+						}
+					}
+				}
+			}else{
+				wirelessOk = true;
+			}
+			//Controllo punteggio per bluetooth
+			if (temp.getBluetoothCondBool() == true){
+				ArrayList<String> bluetoothCond = temp.getBluetoothCond();
+				for(int j = 0; j < bluetoothCond.size(); j++){
+					for(int k = 0; k < bluetoothDect.size(); k++){
+						if ((bluetoothCond.get(j)).equals(bluetoothDect.get(k))){
+							bluetoothOk = true;
+							score+= 1;
+						}
+					}
+				}
+			}else{
+				bluetoothOk = true;
+			}
+			//Controllo punteggio per location
+			if (temp.getExternCond().equals(externCond)){
+				locationOk = true;
+				score+= 1;
+			}else if(temp.getExternCond().equals("indifferente")){
+				locationOk = true;
+			}
+			if ((maxScore < score)&&(wirelessOk == true)&&(bluetoothOk == true)&&(locationOk == true)){
+				bestProfile = i;
+			}
+		}
+		if (score == 0){
+			return null;
+		}else{
+			return profileSet.get(bestProfile);
+		}
 	}
 	
 	//Restituisce il numero di profili salvati
@@ -99,27 +154,67 @@ public class ProfileSet {
 		return size;
 	}
 	
+	//Svuota i profili
+	public void cancellAllProfiles(){
+		profileSet = new ArrayList<Profile>();
+		size = 0;
+	}
+	
+	 //Salva i proili su disco, da modificare perchè bisogna passare la stinga al profile Set e si deve arrangiare
+    public boolean saveProfilesToDisk(FileOutputStream fOut) throws IOException, TransformerException, ParserConfigurationException{
+    	try{
+    		String profileStr = saveProfilesToString();
+    		OutputStreamWriter osw = new OutputStreamWriter(fOut);
+    		osw.write(profileStr);
+    		osw.flush();
+    		osw.close();
+    		fOut.close();
+    		return true;
+    	}catch(Exception e){
+    		return false;
+    	}
+    }
+
+    //Carica i profili salvati
+	public boolean readProfileToDisk(FileInputStream fIn){
+		try{
+			//Cancello tutti i profili
+			cancellAllProfiles();
+			//FileInputStream fIn = openFileInput(profileFile);
+			InputStreamReader osr = new InputStreamReader(fIn);
+			String profileStr = "";
+			while(osr.ready()){
+				profileStr = profileStr + (char)osr.read();
+			}
+			readProfileToString(profileStr);
+			osr.close();
+			fIn.close();
+			return true;
+		}catch(Exception e){
+			return false;
+		}   
+	}
+	
 	//Salva il mprofilo in una stringa xml
-	public String saveProfilesToString() throws TransformerException, ParserConfigurationException{
+	private String saveProfilesToString() throws TransformerException, ParserConfigurationException{
     	Element profileEl = convProfilesToXml();
     	String profileStr = convXmlToString(profileEl);
     	return profileStr;
     }
 	
 	//Carica i profili da una stringa xml
-	public void readProfileToString(String profileStr) throws SAXException, IOException, ParserConfigurationException{
+	private void readProfileToString(String profileStr) throws SAXException, IOException, ParserConfigurationException{
 		try{
 			Document doc;
 			doc = convStringToXml(profileStr);
 			readProfilesFromXml(doc);
 		}catch(TransformerException e){
 		}
-
 	}
 	
 	//Crea il set di profili da un Document XML
 	@SuppressWarnings("unchecked")
-	public void readProfilesFromXml(Document xmlProfile) throws ParserConfigurationException, TransformerException{
+	private void readProfilesFromXml(Document xmlProfile) throws ParserConfigurationException, TransformerException{
 		NodeList profileList = xmlProfile.getElementsByTagName("profile");
 		int numProf = profileList.getLength(); //Numero di profili trovati
 		//Creo degli array con le impostazioni dei profili
@@ -132,7 +227,7 @@ public class ProfileSet {
 		ArrayList<String> wirelessCondArray[] = new ArrayList[numProf];
 		boolean blutoothCondBoolArray[] = new boolean[numProf];
 		ArrayList<String> blutoothCondArray[] = new ArrayList[numProf];
-		boolean externalCondBoolArray[] = new boolean[numProf];
+		String externalCondBoolArray[] = new String[numProf];
 		
 		NodeList profileNameList = xmlProfile.getElementsByTagName("profileName");
 		NodeList ringVolumeList = xmlProfile.getElementsByTagName("ringVolume");
@@ -167,8 +262,11 @@ public class ProfileSet {
 	    	}catch(Exception e){
 	    		blutoothCondArray[i] =  convStringToArray("");
 	    	}
-	    	externalCondBoolArray[i] = convStringToBool(externalCondBoolList.item(i).getFirstChild().getTextContent());
-	    	
+	    	try{
+	    		externalCondBoolArray[i] = (externalCondBoolList.item(i).getFirstChild().getTextContent());
+			}catch(Exception e){
+				externalCondBoolArray[i] = "";
+			}
 	    	Profile newProfile = new Profile(profileNameArray[i], ringVolumeArray[i], vibrationSetArray[i], wirelessSetArray[i], blutoothSetArray[i], wirelessCondBoolArray[i], wirelessCondArray[i], blutoothCondBoolArray[i], blutoothCondArray[i], externalCondBoolArray[i]);
 	    	insert(newProfile);
 
@@ -176,7 +274,7 @@ public class ProfileSet {
 	}
 	
 	//Converte i profili in un file xml
-	public Element convProfilesToXml() throws ParserConfigurationException{
+	private Element convProfilesToXml() throws ParserConfigurationException{
 		DocumentBuilderFactory dbfac = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder = dbfac.newDocumentBuilder();
 		Document doc = docBuilder.newDocument();
@@ -200,7 +298,7 @@ public class ProfileSet {
 			wirelessSet.appendChild(doc.createTextNode("" + prof.getWirelessSet()));
 		    //Creo il nodo blutoothSet
 			Element blutoothSet = doc.createElement("blutoothSet");
-			blutoothSet.appendChild(doc.createTextNode("" + prof.getBlutoothSet()));
+			blutoothSet.appendChild(doc.createTextNode("" + prof.getBluetoothSet()));
 			//Creo il nodo wirelessCondBool
 			Element wirelessCondBool = doc.createElement("wirelessCondBool");
 			wirelessCondBool.appendChild(doc.createTextNode("" + prof.getWirelessCondBool()));
@@ -209,10 +307,10 @@ public class ProfileSet {
 			wirelessCond.appendChild(doc.createTextNode(convArrayToString(prof.getWirelessCond())));
 			//Creo il nodo blutoothCondBool
 			Element blutoothCondBool = doc.createElement("blutoothCondBool");
-			blutoothCondBool.appendChild(doc.createTextNode("" + prof.getBlutoothCondBool()));
+			blutoothCondBool.appendChild(doc.createTextNode("" + prof.getBluetoothCondBool()));
 			//Creo il nodo blutoothCond
 			Element blutoothCond = doc.createElement("blutoothCond");
-			blutoothCond.appendChild(doc.createTextNode(convArrayToString(prof.getBlutoothCond())));
+			blutoothCond.appendChild(doc.createTextNode(convArrayToString(prof.getBluetoothCond())));
 			//Creo il nodo externalCondBool
 			Element externalCondBool = doc.createElement("externalCondBool");
 			externalCondBool.appendChild(doc.createTextNode("" + prof.getExternCond()));
@@ -233,7 +331,7 @@ public class ProfileSet {
 	}
 	
 	//Converte una stringa in un Document XML
-	protected Document convStringToXml(String s) throws SAXException, IOException, ParserConfigurationException{
+	private Document convStringToXml(String s) throws SAXException, IOException, ParserConfigurationException{
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 	    DocumentBuilder parser = factory.newDocumentBuilder();
 	    Document d = parser.parse(new ByteArrayInputStream(s.getBytes()));
@@ -241,7 +339,7 @@ public class ProfileSet {
 	}
 	
 	//Converte un Document XML in una stringa
-	protected String convXmlToString (Element doc) throws TransformerException{
+	private String convXmlToString (Element doc) throws TransformerException{
 		TransformerFactory transfac = TransformerFactory.newInstance();
         Transformer trans = transfac.newTransformer();
         trans.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
