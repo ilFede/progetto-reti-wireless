@@ -1,12 +1,12 @@
 package fede.profile;
 
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import android.app.Activity;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -15,48 +15,17 @@ import android.content.Intent;
 import android.location.GpsSatellite;
 import android.location.GpsStatus;
 import android.location.LocationManager;
+import android.media.AudioManager;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
 import android.os.SystemClock;
 import android.widget.Toast;
 
 public class ProfilesSetService extends Service{
 	
-	/**private class ProfilesSetThread extends Thread implements Runnable{
-		
-		private ProfilesSet profiles;
-		private Context context;
-		private Toast toast;
-		//Costruttore
-		public ProfilesSetThread(ProfilesSet profiles){
-			this.profiles = profiles;
-			//this.context = context;
-			this.toast = toast;
-		}
-		
-		public void run(){
-			setProfile();
-			//while(true){}
-		}
-		
-		public void setProfile(){
-			//while(true){}
-			toast.setText("!!!!!");
-			//toast.show();
-			//while(true){}
-		}
-		 //Mostra una notifica
-	    private void showNotification(String notify){
-	   
-	    }
-	}*/
-	
 	private ProfilesSet profilesSet;
 	private String profileFile = "profiles.dat";
-	private ProfileChangeThread profilesThread = new ProfileChangeThread(profilesSet);
 	
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -68,8 +37,7 @@ public class ProfilesSetService extends Service{
     }
 	
 	public void onCreate() {
-		
-		profilesThread.start();
+		profilesSet = new ProfilesSet();
 	}
 	
 	public int onStartCommand(Intent intent, int flags, int startId) {
@@ -82,14 +50,15 @@ public class ProfilesSetService extends Service{
 		try{
 			FileInputStream fIn = openFileInput(profileFile);
 			boolean result = profilesSet.readProfileToDisk(fIn);
+			fIn.close();
 			if (result == false){
-				showNotification("Errore nel caricamento dati");
-			}else{
-				showNotification("Errore nel caricamento dati");
+				showNotification("Nessun profilo salvato");
 			}
 		}catch(Exception e){
-			showNotification("Errore nel caricamento dati");
+			showNotification("Errore nel caricamento dati da parte del service");
 		}
+		setProfile();
+
 	}
 	
 	//Mostra una notifica
@@ -107,6 +76,7 @@ public class ProfilesSetService extends Service{
 			bltAdapter.enable();
 		}
 		bltAdapter.startDiscovery();
+		
 		//Avvio ricerca delle reti wireless
 		//Context con = Context.getApplicationContext();
 		WifiManager wfManager = (WifiManager) con.getSystemService(Context.WIFI_SERVICE);
@@ -130,7 +100,7 @@ public class ProfilesSetService extends Service{
 		ArrayList<String> wfArray = new ArrayList<String>();
 				
 		for (int i = 0; i < wfList.size(); i++){
-			wfArray.add(wfList.get(i).SSID);
+			wfArray.add(wfList.get(i).SSID); //Array con tutte le wireless rilevate
 		}
 		
 		Set<BluetoothDevice> bltDevices = bltAdapter.getBondedDevices();
@@ -141,17 +111,45 @@ public class ProfilesSetService extends Service{
 		}		
 		Iterable<GpsSatellite> satellitesList = gpsStatus.getSatellites();
 		Iterator<GpsSatellite> iterator = satellitesList.iterator();
-		String location = "interno";
+		String location = "Interno";
 		if (iterator.hasNext()){
-			location = "esterno";
+			location = "Esterno";
 		}
 		
+		//A questo punto ho terminato le ricerche		
 		Profile bestProfile = profilesSet.getDinamicProfile(wfArray, bltArray, location);
 		
 		//Impostare il profilo con bestProfile
-		
-		
-
+		try{
+			AudioManager audioManager = (AudioManager) this.getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+			if (bestProfile.getVibrationSet() == true){
+				audioManager.setVibrateSetting(AudioManager.VIBRATE_TYPE_RINGER, AudioManager.VIBRATE_SETTING_ON);
+			}else{
+				audioManager.setVibrateSetting(AudioManager.VIBRATE_TYPE_RINGER, AudioManager.VIBRATE_SETTING_OFF);
+			}
+			
+			audioManager.setStreamVolume(AudioManager.STREAM_RING, bestProfile.getRingVolume(), 0);
+			
+			wfManager.setWifiEnabled(bestProfile.getWirelessSet());
+			
+			if (bestProfile.getBluetoothSet() == true){
+				bltAdapter.enable();
+			}else{
+				bltAdapter.disable();
+			}
+			showNotification("Caricato profilo " + bestProfile.getProfileName());
+		}catch(Exception e){
+			showNotification("Nessun profilo compatibile");
+			//Ripristino il bluetooth
+			if (bltEnabled == true){
+				bltAdapter.enable();
+			}else{
+				bltAdapter.disable();
+			}
+			
+			//Riprisitno il wireless
+			wfManager.setWifiEnabled(wfEnabled);
+		}
 
 	}
 
