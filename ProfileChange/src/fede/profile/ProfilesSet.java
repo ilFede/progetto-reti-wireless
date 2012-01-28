@@ -107,8 +107,8 @@ public class ProfilesSet {
 			if (temp.getWirelessCondBool() == true){
 				ArrayList<String> wirelessCond = temp.getWirelessCond();
 				for(int j = 0; j < wirelessCond.size(); j++){
-					for(int k = 0; k < bluetoothDect.size(); k++){
-						if ((wirelessCond.get(j)).equals(wirelessDect.get(k))){
+					for(int k = 0; k < wirelessDect.size(); k++){
+						if ((wirelessCond.get(j)).equalsIgnoreCase(wirelessDect.get(k))){
 							wirelessOk = true;
 							score+= 1;
 						}
@@ -122,7 +122,7 @@ public class ProfilesSet {
 				ArrayList<String> bluetoothCond = temp.getBluetoothCond();
 				for(int j = 0; j < bluetoothCond.size(); j++){
 					for(int k = 0; k < bluetoothDect.size(); k++){
-						if ((bluetoothCond.get(j)).equals(bluetoothDect.get(k))){
+						if ((bluetoothCond.get(j)).equalsIgnoreCase(bluetoothDect.get(k))){
 							bluetoothOk = true;
 							score+= 1;
 						}
@@ -132,10 +132,10 @@ public class ProfilesSet {
 				bluetoothOk = true;
 			}
 			//Controllo punteggio per location
-			if (temp.getExternCond().equals(externCond)){
+			if (temp.getExternCond().equalsIgnoreCase(externCond)){
 				locationOk = true;
 				score+= 1;
-			}else if(temp.getExternCond().equals("indifferente")){
+			}else if(temp.getExternCond().equalsIgnoreCase("Indifferente")){
 				locationOk = true;
 			}
 			if ((maxScore < score)&&(wirelessOk == true)&&(bluetoothOk == true)&&(locationOk == true)){
@@ -168,7 +168,6 @@ public class ProfilesSet {
     		osw.write(profileStr);
     		osw.flush();
     		osw.close();
-    		fOut.close();
     		return true;
     	}catch(Exception e){
     		return false;
@@ -188,7 +187,6 @@ public class ProfilesSet {
 			}
 			readProfileToString(profileStr);
 			osr.close();
-			fIn.close();
 			return true;
 		}catch(Exception e){
 			return false;
@@ -256,7 +254,7 @@ public class ProfilesSet {
 	    	}catch(Exception e){
 	    		wirelessCondArray[i] = convStringToArray("");
 	    	}
-	    	wirelessCondBoolArray[i] = convStringToBool(blutoothCondBoolList.item(i).getFirstChild().getTextContent());
+	    	blutoothCondBoolArray[i] = convStringToBool(blutoothCondBoolList.item(i).getFirstChild().getTextContent());
 	    	try{
 	  	    	blutoothCondArray[i] = convStringToArray(blutoothCondList.item(i).getFirstChild().getTextContent());
 	    	}catch(Exception e){

@@ -49,9 +49,9 @@ public class Start extends Activity {
 	    	//srvIntent = new Intent(getApplicationContext(), Class.forName("fede.profile.ProfilesSetService"));
 	    	srvIntent = new Intent(getApplicationContext(), ProfilesSetService.class);
 	    	openHomepage();
-	    	showNotification("Applicazione caricata correttamente");
+	    	//showNotification("Applicazione caricata correttamente");
     	}catch(Exception e){
-    		showNotification("Errore nel caricamento dell'applicazione");
+    		//showNotification("Errore nel caricamento dell'applicazione");
     	}
     }
     
@@ -104,6 +104,7 @@ public class Start extends Activity {
     	List<CharSequence> itemListLocation = new ArrayList<CharSequence>();
     	itemListLocation.add("Interno");
     	itemListLocation.add("Esterno");
+    	itemListLocation.add("Indifferente");
     	ArrayAdapter<CharSequence> adapterLocation = new ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_item, itemListLocation);
         adapterLocation.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     	((Spinner) findViewById(R.id.spnLocation)).setAdapter(adapterLocation);
@@ -182,12 +183,13 @@ public class Start extends Activity {
     	List<CharSequence> itemListLocation = new ArrayList<CharSequence>();
     	itemListLocation.add("Interno");
     	itemListLocation.add("Esterno");
+    	itemListLocation.add("Indifferente");
     	ArrayAdapter<CharSequence> adapterLocation = new ArrayAdapter<CharSequence>(this, android.R.layout.simple_spinner_item, itemListLocation);
         adapterLocation.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     	((Spinner) findViewById(R.id.spnLocation)).setAdapter(adapterLocation);
-    	if (profile.getExternCond().equals("interno")){
+    	if (profile.getExternCond().equalsIgnoreCase("interno")){
     		((Spinner) findViewById(R.id.spnLocation)).setSelection(0);
-    	}else if (profile.getExternCond().equals("esterno")){
+    	}else if (profile.getExternCond().equalsIgnoreCase("esterno")){
     		((Spinner) findViewById(R.id.spnLocation)).setSelection(1);
     	}else{
         	((Spinner) findViewById(R.id.spnLocation)).setSelection(2);
@@ -266,10 +268,14 @@ public class Start extends Activity {
     
     //Salva i proili su disco, da modificare perchè bisogna passare la stinga al profile Set e si deve arrangiare
 	private void saveProfilesToDisk() throws IOException, TransformerException, ParserConfigurationException{
-    	FileOutputStream fOut = openFileOutput(profileFile,MODE_PRIVATE); 
+    	FileOutputStream fOut = openFileOutput(profileFile,Context.MODE_WORLD_WRITEABLE); 
     	boolean result = profilesSet.saveProfilesToDisk(fOut);
+    	fOut.flush();
+    	fOut.close();
 		if (result == false){
 			showNotification("Errore nel salvataggio dati");
+		}else{
+			//showNotification("Profilo salvato");
 		}
     }
 
@@ -278,8 +284,11 @@ public class Start extends Activity {
 		try{
 			FileInputStream fIn = openFileInput(profileFile);
 			boolean result = profilesSet.readProfileToDisk(fIn);
+			fIn.close();
 			if (result == false){
-				showNotification("Errore nel caricamento dati");
+				showNotification("Nessun profilo salvato");
+			}else{
+				showNotification("Profili caricati");
 			}
 		}catch(Exception e1){
 			try{
@@ -322,19 +331,12 @@ public class Start extends Activity {
 	//Metodi per il Service
 	//Avvia il service
 	public void serviceStart(View v){
-		/**Thread thread = new Thread()
-		{
-		      @Override
-		      public void run() {
-		    	  Intent srvIntent = new Intent(getApplicationContext(), ProfilesSetService.class);
-		    	  //startService(srvIntent);
-		      }
-		  };
-		  thread.start();*/
 		//n ew ProfileChangeAsynchTask().execute();
+		//ProfilesSetService pss = new ProfilesSetService();
+		//pss.readProfileToDisk();
 		startService(srvIntent);
     	//ComponentName name = startService(srvIntent);
-    	showNotification("c");
+    	//showNotification("c");
 	}
 
 }
