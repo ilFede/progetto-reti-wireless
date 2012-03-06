@@ -4,12 +4,44 @@
   android:orientation="vertical"
   android:layout_width="match_parent"
   android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Scegli un profilo:"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
     <Spinner android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/spnMdfProfile"></Spinner>
-    <LinearLayout android:id="@+id/linearLayout1" android:layout_height="wrap_content" android:layout_width="match_parent" android:onClick="openHomepage">
-        <TextView android:id="@+id/textView2" android:layout_height="wrap_content" android:text="         " android:textAppearance="?android:attr/textAppearanceLarge" android:layout_width="wrap_content"></TextView>
-        <Button android:id="@+id/button1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:onClick="openModifyProfileView" android:text="     Ok      "></Button>
-        <TextView android:id="@+id/textView1" android:layout_height="wrap_content" android:text="        " android:textAppearance="?android:attr/textAppearanceLarge" android:layout_width="wrap_content"></TextView>
-        <Button android:text="Annulla" android:id="@+id/button2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:onClick="openHomepage"></Button>
+    <LinearLayout android:id="@+id/linearLayout1" android:layout_height="wrap_content" android:layout_width="match_parent" android:onClick="openHomepage" android:gravity="left|right">
+
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" android:gravity="left">
+
+            <Button
+                android:id="@+id/button1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="openModifyProfileView"
+                android:text="   Mosta/Modifica   " />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" android:gravity="right">
+
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="openHomepage"
+                android:text="   Annulla   " />
+
+        </LinearLayout>
     </LinearLayout>
     
 </LinearLayout>

@@ -46,8 +46,36 @@
                 <Spinner android:layout_height="wrap_content" android:layout_width="match_parent" android:layout_weight="1" android:id="@+id/spnLocation"></Spinner>
             </LinearLayout>
             <LinearLayout android:layout_height="wrap_content" android:id="@+id/linearLayout10" android:layout_width="match_parent">
-                <Button android:id="@+id/btnAggiungi2" android:onClick="addProfile" android:text="Ok" android:layout_height="wrap_content" android:layout_width="146dp"></Button>
-                <Button android:id="@+id/button1" android:layout_height="wrap_content" android:text="Annulla" android:onClick="openHomepage" android:layout_width="0dp" android:layout_weight="1"></Button>
+
+                <LinearLayout
+                    android:id="@+id/linearLayout12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" android:gravity="left">
+
+                    <Button
+                        android:id="@+id/btnAggiungi2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="addProfile"
+                        android:text="   Ok   " />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linearLayout11"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="right" >
+
+                    <Button
+                        android:id="@+id/button1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="openHomepage"
+                        android:text="   Annulla   " />
+
+                </LinearLayout>
+
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

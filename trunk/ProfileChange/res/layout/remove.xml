@@ -4,11 +4,44 @@
   android:orientation="vertical"
   android:layout_width="match_parent"
   android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Scegli un profilo:"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
     <Spinner android:layout_height="wrap_content" android:id="@+id/spnRmvProfile" android:layout_width="match_parent"></Spinner>
     <LinearLayout android:layout_height="wrap_content" android:id="@+id/linearLayout1" android:layout_width="match_parent">
-        <Button android:id="@+id/btnRimuovi2" android:onClick="removeProfile" android:layout_width="138dp" android:text="Rimuovi" android:layout_height="wrap_content"></Button>
-        <TextView android:id="@+id/textView1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="          "></TextView>
-        <Button android:id="@+id/button1" android:text="Annulla" android:layout_height="wrap_content" android:layout_width="146dp" android:onClick="openHomepage"></Button>
+
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:gravity="left">
+
+            <Button
+                android:id="@+id/btnRimuovi2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="removeProfile"
+                android:text="    Rimuovi   " />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" android:gravity="right">
+
+            <Button
+                android:id="@+id/button1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="openHomepage"
+                android:text="   Annulla   " />
+
+        </LinearLayout>
     </LinearLayout>
     
 </LinearLayout>
