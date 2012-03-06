@@ -1,51 +1,168 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent" android:weightSum="1" android:orientation="vertical">
-    <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/textView6" android:textAppearance="?android:attr/textAppearanceLarge" android:text="       ---Autorileva profilo---"></TextView>
-    <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/textView8" android:text="" android:textAppearance="?android:attr/textAppearanceMedium"></TextView>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="1" android:gravity="center_horizontal">
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="---Autorileva profilo---"
+        android:textAppearance="?android:attr/textAppearanceLarge" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textAppearance="?android:attr/textAppearanceMedium" >
+    </TextView>
 
     <LinearLayout
         android:id="@+id/linearLayout1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <TextView
-            android:id="@+id/TextView01"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="                 " >
-        </TextView>
+        android:layout_height="wrap_content" android:gravity="center_horizontal">
 
         <Button
             android:id="@+id/btnAvvia"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.86"
             android:onClick="serviceStart"
-            android:text="Avvia" >
+            android:text="   Avvia   " >
         </Button>
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/ProgressBar03"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="---Gestione profili---"
+        android:textAppearance="?android:attr/textAppearanceLarge" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textAppearance="?android:attr/textAppearanceMedium" >
+    </TextView>
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="openAddView" >
+
+        <LinearLayout
+            android:id="@+id/linearLayout3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <Button
+                android:id="@+id/btnAggiungi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="openAddView"
+                android:text="Aggiungi" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout4"
+            android:layout_width="168dp"
+            android:layout_height="match_parent" android:gravity="center_horizontal">
+
+            <Button
+                android:id="@+id/btnModifica"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="openModifyView"
+                android:text="Mostra/Modifica" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout5"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="right" >
+
+            <Button
+                android:id="@+id/btnRimuovi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="openRemoveView"
+                android:text="Rimuovi" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar1"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:id="@+id/LinearLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|center_horizontal"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="---Chiudi applicazione---"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <TextView
             android:id="@+id/textView1"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="                  " >
-        </TextView>
+            android:gravity="center"
+            android:onClick="closeApplication"
+            android:text="  Chiudi  " android:typeface="normal"/>
+
     </LinearLayout>
 
-    <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/textView2" android:textAppearance="?android:attr/textAppearanceSmall"></TextView>
-    <ProgressBar android:id="@+id/progressBar1" android:layout_height="wrap_content" style="?android:attr/progressBarStyleHorizontal" android:layout_width="match_parent"></ProgressBar>
-    <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/textView7" android:text="" android:textAppearance="?android:attr/textAppearanceLarge"></TextView>
-    <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/textView5" android:textAppearance="?android:attr/textAppearanceLarge" android:text="          ---Gestione profili---"></TextView>
-    <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/textView9" android:text="" android:textAppearance="?android:attr/textAppearanceMedium"></TextView>
-    <LinearLayout android:layout_width="match_parent" android:id="@+id/linearLayout2" android:layout_height="wrap_content" android:onClick="openAddView">
-        <TextView android:id="@+id/textView4" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="  "></TextView>
-        <Button android:text="Aggiungi" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/btnAggiungi" android:onClick="openAddView"></Button>
-        <Button android:text="Mostra/Modifica" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/btnModifica" android:onClick="openModifyView"></Button>
-        <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/textView3" android:text="      "></TextView>
-        <Button android:text="Rimuovi" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/btnRimuovi" android:onClick="openRemoveView"></Button>
-    </LinearLayout>
-    
+    <ProgressBar
+        android:id="@+id/ProgressBar01"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>

@@ -92,11 +92,11 @@ public class ProfilesSet {
 	}
 	
 	//Restituisce il profilo da impostare in base alle condizioni, questo codice invec sembra più per ottenere le informazioni, metterlo nel servizio 
-	public Profile getDinamicProfile(ArrayList<String> wirelessDect, ArrayList<String> bluetoothDect, String externCond){
+	public Profile getDynamicProfile(ArrayList<String> wirelessDect, ArrayList<String> bluetoothDect, String externCond){
 		int score = 0;
 		int maxScore = 0;
-		int bestProfile = 0;
-		//Controllo tutti i profili per troare il migliore
+		int bestProfile = -1;
+		//Controllo tutti i profili per trovare il migliore
 		for (int i = 0; i < size; i++){
 			score = 0;
 			boolean wirelessOk = false;
@@ -142,7 +142,7 @@ public class ProfilesSet {
 				bestProfile = i;
 			}
 		}
-		if (score == 0){
+		if (bestProfile == -1){
 			return null;
 		}else{
 			return profileSet.get(bestProfile);
@@ -231,12 +231,12 @@ public class ProfilesSet {
 		NodeList ringVolumeList = xmlProfile.getElementsByTagName("ringVolume");
 		NodeList vibrationSetList = xmlProfile.getElementsByTagName("vibrationSet");
 		NodeList wirelessSetList = xmlProfile.getElementsByTagName("wirelessSet");
-		NodeList blutoothSetList = xmlProfile.getElementsByTagName("blutoothSet");
+		NodeList blutoothSetList = xmlProfile.getElementsByTagName("bluetoothSet");
 		NodeList wirelessCondBoolList = xmlProfile.getElementsByTagName("wirelessCondBool");
 		NodeList wirelessCondList = xmlProfile.getElementsByTagName("wirelessCond");
-		NodeList blutoothCondBoolList = xmlProfile.getElementsByTagName("blutoothCondBool");
-		NodeList blutoothCondList = xmlProfile.getElementsByTagName("blutoothCond");
-		NodeList externalCondBoolList = xmlProfile.getElementsByTagName("externalCondBool");
+		NodeList blutoothCondBoolList = xmlProfile.getElementsByTagName("bluetoothCondBool");
+		NodeList blutoothCondList = xmlProfile.getElementsByTagName("bluetoothCond");
+		NodeList externalCondList = xmlProfile.getElementsByTagName("externalCond");
 		
 		for(int i = 0; i < numProf; i++){
 			try{
@@ -261,7 +261,7 @@ public class ProfilesSet {
 	    		blutoothCondArray[i] =  convStringToArray("");
 	    	}
 	    	try{
-	    		externalCondBoolArray[i] = (externalCondBoolList.item(i).getFirstChild().getTextContent());
+	    		externalCondBoolArray[i] = (externalCondList.item(i).getFirstChild().getTextContent());
 			}catch(Exception e){
 				externalCondBoolArray[i] = "";
 			}
@@ -295,7 +295,7 @@ public class ProfilesSet {
 			Element wirelessSet = doc.createElement("wirelessSet");
 			wirelessSet.appendChild(doc.createTextNode("" + prof.getWirelessSet()));
 		    //Creo il nodo blutoothSet
-			Element blutoothSet = doc.createElement("blutoothSet");
+			Element blutoothSet = doc.createElement("bluetoothSet");
 			blutoothSet.appendChild(doc.createTextNode("" + prof.getBluetoothSet()));
 			//Creo il nodo wirelessCondBool
 			Element wirelessCondBool = doc.createElement("wirelessCondBool");
@@ -304,14 +304,14 @@ public class ProfilesSet {
 			Element wirelessCond = doc.createElement("wirelessCond");
 			wirelessCond.appendChild(doc.createTextNode(convArrayToString(prof.getWirelessCond())));
 			//Creo il nodo blutoothCondBool
-			Element blutoothCondBool = doc.createElement("blutoothCondBool");
+			Element blutoothCondBool = doc.createElement("bluetoothCondBool");
 			blutoothCondBool.appendChild(doc.createTextNode("" + prof.getBluetoothCondBool()));
 			//Creo il nodo blutoothCond
-			Element blutoothCond = doc.createElement("blutoothCond");
+			Element blutoothCond = doc.createElement("bluetoothCond");
 			blutoothCond.appendChild(doc.createTextNode(convArrayToString(prof.getBluetoothCond())));
 			//Creo il nodo externalCondBool
-			Element externalCondBool = doc.createElement("externalCondBool");
-			externalCondBool.appendChild(doc.createTextNode("" + prof.getExternCond()));
+			Element externalCond = doc.createElement("externalCond");
+			externalCond.appendChild(doc.createTextNode("" + prof.getExternCond()));
 			//Appendo i nodi
 			profileNode.appendChild(profileName);
 			profileNode.appendChild(ringVolume);
@@ -322,7 +322,7 @@ public class ProfilesSet {
 			profileNode.appendChild(wirelessCond);
 			profileNode.appendChild(blutoothCondBool);
 			profileNode.appendChild(blutoothCond);
-			profileNode.appendChild(externalCondBool);
+			profileNode.appendChild(externalCond);
 			root.appendChild(profileNode);
 		}
 		return root;		

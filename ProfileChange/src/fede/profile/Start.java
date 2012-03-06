@@ -47,12 +47,16 @@ public class Start extends Activity {
 		    maxVolume =  audioManager.getStreamMaxVolume(ringStream);
 	    	//appContext = this.getApplicationContext();
 	    	//srvIntent = new Intent(getApplicationContext(), Class.forName("fede.profile.ProfilesSetService"));
-	    	srvIntent = new Intent(getApplicationContext(), ProfilesSetService.class);
+	    	srvIntent = new Intent(getApplicationContext(), ProfilesService.class);
 	    	openHomepage();
 	    	//showNotification("Applicazione caricata correttamente");
     	}catch(Exception e){
     		//showNotification("Errore nel caricamento dell'applicazione");
     	}
+    }
+    
+    @Override
+    public void onBackPressed() {
     }
     
     //Mostra una notifica
@@ -252,6 +256,11 @@ public class Start extends Activity {
 		openHomepage();
 	}
     
+    //Chiude l'applicazione
+    public void closeApplication(View v){
+    	System.exit(0);
+    }
+    
 	//Fine ascoltatori
     
     //Apre la pagina principale
@@ -331,12 +340,7 @@ public class Start extends Activity {
 	//Metodi per il Service
 	//Avvia il service
 	public void serviceStart(View v){
-		//n ew ProfileChangeAsynchTask().execute();
-		//ProfilesSetService pss = new ProfilesSetService();
-		//pss.readProfileToDisk();
 		startService(srvIntent);
-    	//ComponentName name = startService(srvIntent);
-    	//showNotification("c");
 	}
 
 }
